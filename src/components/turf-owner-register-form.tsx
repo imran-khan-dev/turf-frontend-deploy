@@ -5,9 +5,9 @@ import { useActionState } from "react";
 import { Button } from "./ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "./ui/field";
 import { Input } from "./ui/input";
-import { turfOwnerRegister } from "@/services/auth/register";
+import { turfOwnerRegister } from "@/services/auth/turfOwnerRegister";
 
-const RegisterForm = () => {
+const TurfOwnerRegisterForm = () => {
   const [state, formAction, isPending] = useActionState(
     turfOwnerRegister,
     null
@@ -78,7 +78,7 @@ const RegisterForm = () => {
             )}
           </Field>
 
-          {/* Phone (optional) */}
+          {/* Phone */}
           <Field>
             <FieldLabel htmlFor="phone">Phone</FieldLabel>
             <Input id="phone" name="phone" type="text" placeholder="+8801..." />
@@ -120,4 +120,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default TurfOwnerRegisterForm;

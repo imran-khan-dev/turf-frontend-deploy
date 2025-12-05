@@ -1,13 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { loginUser } from "@/services/auth/loginUser";
+import loginOwnerAdminManager from "@/services/auth/loginOwnerAdminManager";
 import { useActionState } from "react";
 import { Button } from "./ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "./ui/field";
 import { Input } from "./ui/input";
 
 const UserLoginForm = ({ redirect }: { redirect?: string }) => {
-  const [state, formAction, isPending] = useActionState(loginUser, null);
+  const [state, formAction, isPending] = useActionState(
+    loginOwnerAdminManager,
+    null
+  );
 
   const getFieldError = (fieldName: string) => {
     if (state && state.errors) {

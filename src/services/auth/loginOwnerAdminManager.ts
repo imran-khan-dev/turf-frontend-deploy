@@ -28,12 +28,12 @@ const RoleConfig = {
   },
 } as const;
 
-export const loginUser = async (_currentState: any, formData: any) => {
+export const loginOwnerAdminManager = async (_currentState: any, formData: any) => {
 
   console.log("login formData", formData)
 
   try {
-    // ---- 1️⃣ Get role from form ----
+    // ---- Get role from form ----
     const role = formData.get("role") as UserRole;
     if (!role || !RoleConfig[role]) {
       return { success: false, message: "Invalid role selected" };
@@ -41,7 +41,7 @@ export const loginUser = async (_currentState: any, formData: any) => {
 
     const { api, access: accessKey, refresh: refreshKey } = RoleConfig[role];
 
-    // ---- 2️⃣ Build payload and validate ----
+    // ---- Build payload and validate ----
     const payload = {
       email: formData.get("email"),
       password: formData.get("password"),
@@ -52,7 +52,7 @@ export const loginUser = async (_currentState: any, formData: any) => {
 
     const body = JSON.stringify(validation.data);
 
-    // ---- 3️⃣ Send login request to backend ----
+    // ---- Send login request to backend ----
     console.log("checkAPI", api)
     const res = await serverFetch.post(api, {
       body,
@@ -62,11 +62,11 @@ export const loginUser = async (_currentState: any, formData: any) => {
     const result = await res.json();
     if (!result.success) return result;
 
-    // ---- 4️⃣ Extract Set-Cookie headers from backend ----
+    // ---- Extract Set-Cookie headers from backend ----
     const setCookieHeaders = res.headers.getSetCookie();
     if (!setCookieHeaders) throw new Error("No Set-Cookie received from backend");
 
-    // ---- 5️⃣ Parse cookies safely ----
+    // ---- Parse cookies safely ----
     let accessParsed: Record<string, string | undefined> | null = null;
     let refreshParsed: Record<string, string | undefined> | null = null;
 
@@ -81,7 +81,7 @@ export const loginUser = async (_currentState: any, formData: any) => {
       throw new Error("Missing access or refresh token cookies");
     }
 
-    // ---- 6️⃣ Set cookies using Next.js server cookie API ----
+    // ---- Set cookies using Next.js server cookie API ----
     await setCookie(accessKey, String(accessParsed[accessKey]), {
       httpOnly: true,
       secure: true,
@@ -98,7 +98,7 @@ export const loginUser = async (_currentState: any, formData: any) => {
       sameSite: (refreshParsed["SameSite"] as any) ?? "strict",
     });
 
-    // ---- 7️⃣ Return success ----
+    // ---- Return success ----
     return { success: true, message: "Login successful", role };
   } catch (err: any) {
     if (err?.digest?.startsWith("NEXT_REDIRECT")) throw err;
@@ -115,4 +115,4 @@ export const loginUser = async (_currentState: any, formData: any) => {
   }
 };
 
-export default loginUser;
+export default loginOwnerAdminManager;

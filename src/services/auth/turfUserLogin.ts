@@ -8,6 +8,9 @@ import { zodValidator } from "@/lib/zodValidator";
 import { loginValidationZodSchema } from "@/zod/auth/auth.validation";
 
 export const turfUserlogin = async (_currentState: any, formData: any) => {
+
+  console.log("turfUserlogin", formData)
+
   try {
     // Extract form data
     const email = formData.get("email");
@@ -32,6 +35,8 @@ export const turfUserlogin = async (_currentState: any, formData: any) => {
       turfProfileSlug, // <-- FIXED! Now included
     });
 
+    console.log("checkAPI", body)
+
     // Call backend Turf User login API
     const res = await serverFetch.post("auth/login/turf-user", {
       body,
@@ -39,7 +44,11 @@ export const turfUserlogin = async (_currentState: any, formData: any) => {
     });
 
     const result = await res.json();
+    console.log("checkAPIResult", result)
+
     if (!result.success) return result;
+
+    console.log("checkAPIResult", result)
 
     // Extract cookies
     const setCookieHeaders = res.headers.getSetCookie();

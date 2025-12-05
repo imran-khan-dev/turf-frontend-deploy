@@ -2,11 +2,14 @@
 "use server";
 
 import { serverFetch } from "@/lib/server-fetch";
-import { registerTurfOwnerValidationZodSchema } from './../../zod/auth/auth.validation';
-import loginUser from "./loginUser";
+import { registerTurfUserValidationZodSchema } from '../../zod/auth/auth.validation';
+import turfUserlogin from "./turfUserLogin";
 
 
-export const turfOwnerRegister = async (_currentState: any, formData: any) => {
+export const turfUserRegister = async (_currentState: any, formData: any) => {
+
+    console.log("checkregisterform", formData)
+
     try {
         const file = formData.get("file");
 
@@ -15,11 +18,12 @@ export const turfOwnerRegister = async (_currentState: any, formData: any) => {
             email: formData.get("email"),
             phone: formData.get("phone"),
             file: file,
+            turfProfileSlug: formData.get("turfProfileSlug"),
             password: formData.get("password"),
             confirmPassword: formData.get("confirmPassword"),
         };
 
-        const validated = registerTurfOwnerValidationZodSchema.safeParse(validationData);
+        const validated = registerTurfUserValidationZodSchema.safeParse(validationData);
 
         if (!validated.success) {
             return {
@@ -36,12 +40,13 @@ export const turfOwnerRegister = async (_currentState: any, formData: any) => {
         newFormData.append("email", formData.get("email"));
         newFormData.append("password", formData.get("password"));
         newFormData.append("phone", formData.get("phone") || "");
+        newFormData.append("turfProfileSlug", formData.get("turfProfileSlug"));
 
         if (file) {
             newFormData.append("file", file);
         }
 
-        const res = await serverFetch.post("user/register-owner", { body: newFormData }, "ownerAccess")
+        const res = await serverFetch.post("turf-user/register", { body: newFormData }, "turfUserAccess")
 
         console.log("registerTest", res)
 
@@ -52,9 +57,10 @@ export const turfOwnerRegister = async (_currentState: any, formData: any) => {
             const loginData = new FormData();
             loginData.append("email", formData.get("email") as string);
             loginData.append("password", formData.get("password") as string);
-            loginData.append("role", "owner");
+            loginData.append("role", "turfUser");
+            loginData.append("turfProfileSlug", formData.get("turfProfileSlug") as string); 
 
-            return await loginUser(null, loginData);
+            return await turfUserlogin(null, loginData);
         }
 
         return result;
@@ -64,4 +70,4 @@ export const turfOwnerRegister = async (_currentState: any, formData: any) => {
     }
 };
 
-export default turfOwnerRegister;
+export default turfUserRegister;
