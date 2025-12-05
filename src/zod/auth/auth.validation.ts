@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import z from "zod";
 
-export const registerPatientValidationZodSchema = z.object({
+export const registerTurfOwnerValidationZodSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
-    address: z.string().optional(),
     email: z.email({ message: "Valid email is required" }),
+    phone: z.string().min(10, { message: "Valid phone number is required" }),
+    photo: z.any().optional(),
     password: z.string().min(6, {
         error: "Password is required and must be at least 6 characters long",
     }).max(100, {

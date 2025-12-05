@@ -2,23 +2,11 @@
 "use server";
 
 import { serverFetch } from "@/lib/server-fetch";
-import z from "zod";
+import { registerTurfOwnerValidationZodSchema } from './../../zod/auth/auth.validation';
+import loginUser from "./loginUser";
 
-const registerOwnerValidationZodSchema = z
-    .object({
-        name: z.string().min(1, { message: "Name is required" }),
-        email: z.string().email({ message: "Valid email is required" }),
-        password: z.string().min(6, { message: "Password must be at least 6 characters long" }),
-        confirmPassword: z.string().min(6),
-        phone: z.string().min(10).optional().or(z.literal("")),
-        file: z.any().optional(), // image file
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-        message: "Passwords do not match",
-        path: ["confirmPassword"],
-    });
 
-export const register = async (_currentState: any, formData: any) => {
+export const turfOwnerRegister = async (_currentState: any, formData: any) => {
     try {
         const file = formData.get("file");
 
@@ -26,12 +14,12 @@ export const register = async (_currentState: any, formData: any) => {
             name: formData.get("name"),
             email: formData.get("email"),
             phone: formData.get("phone"),
-            file: file, // include in validation
+            file: file,
             password: formData.get("password"),
             confirmPassword: formData.get("confirmPassword"),
         };
 
-        const validated = registerOwnerValidationZodSchema.safeParse(validationData);
+        const validated = registerTurfOwnerValidationZodSchema.safeParse(validationData);
 
         if (!validated.success) {
             return {
@@ -57,9 +45,23 @@ export const register = async (_currentState: any, formData: any) => {
 
         console.log("registerTest", res)
 
-        return res;
+        const result = await res.json();
+
+
+        if (result.success) {
+            const loginData = new FormData();
+            loginData.append("email", formData.get("email") as string);
+            loginData.append("password", formData.get("password") as string);
+            loginData.append("role", "owner");
+
+            return await loginUser(null, loginData);
+        }
+
+        return result;
     } catch (error) {
         console.log(error);
         return { error: "Registration failed" };
     }
 };
+
+export default turfOwnerRegister;

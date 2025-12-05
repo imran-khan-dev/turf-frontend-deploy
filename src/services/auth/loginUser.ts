@@ -29,6 +29,9 @@ const RoleConfig = {
 } as const;
 
 export const loginUser = async (_currentState: any, formData: any) => {
+
+  console.log("login formData", formData)
+
   try {
     // ---- 1️⃣ Get role from form ----
     const role = formData.get("role") as UserRole;

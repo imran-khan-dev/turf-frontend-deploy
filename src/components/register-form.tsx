@@ -5,13 +5,16 @@ import { useActionState } from "react";
 import { Button } from "./ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "./ui/field";
 import { Input } from "./ui/input";
-import { register } from "@/services/auth/register";
+import { turfOwnerRegister } from "@/services/auth/register";
 
 const RegisterForm = () => {
-  const [state, formAction, isPending] = useActionState(register, null);
+  const [state, formAction, isPending] = useActionState(
+    turfOwnerRegister,
+    null
+  );
 
   const getFieldError = (fieldName: string) => {
-    if (state?.errors) {
+    if (state && "errors" in state && state.errors) {
       const error = state.errors.find((err: any) => err.field === fieldName);
       return error ? error.message : null;
     }
@@ -22,7 +25,6 @@ const RegisterForm = () => {
     <form action={formAction} encType="multipart/form-data">
       <FieldGroup>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
           {/* Name */}
           <Field>
             <FieldLabel htmlFor="name">Full Name</FieldLabel>
@@ -37,7 +39,12 @@ const RegisterForm = () => {
           {/* Email */}
           <Field>
             <FieldLabel htmlFor="email">Email</FieldLabel>
-            <Input id="email" name="email" type="email" placeholder="m@example.com" />
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="m@example.com"
+            />
             {getFieldError("email") && (
               <FieldDescription className="text-red-600">
                 {getFieldError("email")}
@@ -59,7 +66,11 @@ const RegisterForm = () => {
           {/* Confirm Password */}
           <Field>
             <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
-            <Input id="confirmPassword" name="confirmPassword" type="password" />
+            <Input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+            />
             {getFieldError("confirmPassword") && (
               <FieldDescription className="text-red-600">
                 {getFieldError("confirmPassword")}
@@ -69,7 +80,7 @@ const RegisterForm = () => {
 
           {/* Phone (optional) */}
           <Field>
-            <FieldLabel htmlFor="phone">Phone (optional)</FieldLabel>
+            <FieldLabel htmlFor="phone">Phone</FieldLabel>
             <Input id="phone" name="phone" type="text" placeholder="+8801..." />
             {getFieldError("phone") && (
               <FieldDescription className="text-red-600">
