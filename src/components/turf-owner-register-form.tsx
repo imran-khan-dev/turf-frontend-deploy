@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "./ui/field";
 import { Input } from "./ui/input";
 import { turfOwnerRegister } from "@/services/auth/turfOwnerRegister";
+import { toast } from "sonner";
 
 const TurfOwnerRegisterForm = () => {
   const [state, formAction, isPending] = useActionState(
@@ -20,6 +21,12 @@ const TurfOwnerRegisterForm = () => {
     }
     return null;
   };
+
+  useEffect(() => {
+    if (state && !state.success && state.message) {
+      toast.error(state.message);
+    }
+  }, [state]);
 
   return (
     <form action={formAction} encType="multipart/form-data">
@@ -109,7 +116,7 @@ const TurfOwnerRegisterForm = () => {
 
             <FieldDescription className="px-6 text-center">
               Already have an account?{" "}
-              <a href="/login" className="text-blue-600 hover:underline">
+              <a href="/owner/login" className="text-blue-600 hover:underline">
                 Sign in
               </a>
             </FieldDescription>

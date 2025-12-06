@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "./ui/field";
 import { Input } from "./ui/input";
 import turfUserlogin from "@/services/auth/turfUserLogin";
+import { toast } from "sonner";
 
 const TurfUserLoginForm = ({
   redirect,
@@ -16,14 +17,25 @@ const TurfUserLoginForm = ({
   const [state, formAction, isPending] = useActionState(turfUserlogin, null);
 
   const getFieldError = (fieldName: string) => {
-    if (state && state.errors) {
+    if (state && "errors" in state && state.errors) {
       const error = state.errors.find((err: any) => err.field === fieldName);
-      return error.message;
+      return error?.message;
     } else {
       return null;
     }
   };
-  console.log(state);
+
+  useEffect(() => {
+    if (
+      state &&
+      !state.success &&
+      "message" in state &&
+      state.message
+    ) {
+      toast.error(state.message);
+    }
+  }, [state]);
+  
 
   return (
     <form action={formAction}>

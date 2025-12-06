@@ -28,11 +28,14 @@ export const turfUserRegister = async (_currentState: any, formData: any) => {
         if (!validated.success) {
             return {
                 success: false,
-                errors: validated.error.issues.map((issue) => ({
-                    field: issue.path[0],
-                    message: issue.message,
-                })),
-            };
+                errors: validated.error.issues.map(issue => {
+                    return {
+                        field: issue.path[0],
+                        message: issue.message,
+                    }
+                }
+                )
+            }
         }
 
         const newFormData = new FormData();
@@ -58,15 +61,20 @@ export const turfUserRegister = async (_currentState: any, formData: any) => {
             loginData.append("email", formData.get("email") as string);
             loginData.append("password", formData.get("password") as string);
             loginData.append("role", "turfUser");
-            loginData.append("turfProfileSlug", formData.get("turfProfileSlug") as string); 
+            loginData.append("turfProfileSlug", formData.get("turfProfileSlug") as string);
 
             return await turfUserlogin(null, loginData);
         }
 
         return result;
     } catch (error) {
+        // Re-throw NEXT_REDIRECT errors so Next.js can handle them
+        const err = error as Error & { digest?: string };
+        if (err?.digest?.startsWith('NEXT_REDIRECT')) {
+            throw error;
+        }
         console.log(error);
-        return { error: "Registration failed" };
+        return { success: false, message: `${process.env.NODE_ENV === 'development' ? (err as any).message : "Registration Failed. Please try again."}` };
     }
 };
 

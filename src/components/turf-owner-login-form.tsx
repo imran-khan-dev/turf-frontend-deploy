@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import loginOwnerAdminManager from "@/services/auth/loginOwnerAdminManager";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "./ui/field";
 import { Input } from "./ui/input";
+import { toast } from "sonner";
 
 const UserLoginForm = ({ redirect }: { redirect?: string }) => {
   const [state, formAction, isPending] = useActionState(
@@ -13,14 +14,26 @@ const UserLoginForm = ({ redirect }: { redirect?: string }) => {
   );
 
   const getFieldError = (fieldName: string) => {
-    if (state && state.errors) {
+    if (state && "errors" in state && state.errors) {
       const error = state.errors.find((err: any) => err.field === fieldName);
-      return error.message;
+      return error?.message;
     } else {
       return null;
     }
   };
-  console.log(state);
+
+  useEffect(() => {
+    if (state && !state.success && "message" in state && state.message) {
+      toast.error(state.message);
+    }
+
+    if (state && state.success && "message" in state && state.message) {
+      toast.success(state.message);
+    }
+  }, [state]);
+
+  console.log("state", state?.success);
+
   return (
     <form action={formAction}>
       {redirect && <input type="hidden" name="redirect" value={redirect} />}

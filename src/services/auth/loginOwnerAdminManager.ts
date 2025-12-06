@@ -58,7 +58,9 @@ const loginOwnerAdminManager = async (_currentState: any, formData: any) => {
     });
 
     const result = await res.json();
-    if (!result.success) return result;
+    if (!result.success) {
+      throw new Error(result.message || "Login failed");
+    }
 
     // ---- Read cookies ----
     const setCookieHeaders = res.headers.getSetCookie();

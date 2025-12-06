@@ -40,7 +40,9 @@ const turfUserlogin = async (_currentState: any, formData: any) => {
     });
 
     const result = await res.json();
-    if (!result.success) return result;
+    if (!result.success) {
+      throw new Error(result.message || "Login failed");
+    }
 
     // Parse Set-Cookie headers
     const setCookieHeaders = res.headers.getSetCookie();
@@ -78,10 +80,11 @@ const turfUserlogin = async (_currentState: any, formData: any) => {
 
     // Redirect after successful login
     if (redirectTo) {
-      redirect(redirectTo);
+      const requestedPath = redirectTo.toString();
+      redirect(`${requestedPath}?loggedIn=true`);
     } else {
       // Default redirect to turf-user dashboard
-      redirect(`/${turfProfileSlug}/user-dashboard`);
+      redirect(`/${turfProfileSlug}/user-dashboard?loggedIn=true`);
     }
   } catch (err: any) {
     if (err?.digest?.startsWith("NEXT_REDIRECT")) throw err;
