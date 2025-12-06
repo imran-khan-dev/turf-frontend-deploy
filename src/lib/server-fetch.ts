@@ -25,12 +25,17 @@ const serverFetchHelper = async (
         ...restOptions,
     });
 
-    // // Convert Response to plain JS object
-    // const data = await response.json();
-    // console.log("serverFD", data)
+   
     return response;
 
 };
+
+
+
+
+
+
+
 
 // Expose methods for HTTP verbs
 export const serverFetch = {

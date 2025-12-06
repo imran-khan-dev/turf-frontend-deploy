@@ -6,36 +6,32 @@ import { parse } from "cookie";
 import { setCookie } from "./tokenHandlers";
 import { zodValidator } from "@/lib/zodValidator";
 import { loginValidationZodSchema } from "@/zod/auth/auth.validation";
+import { redirect } from "next/navigation";
 
-export const turfUserlogin = async (_currentState: any, formData: any) => {
-
-  console.log("turfUserlogin", formData)
-
+const turfUserlogin = async (_currentState: any, formData: any) => {
   try {
     // Extract form data
     const email = formData.get("email");
     const password = formData.get("password");
     const turfProfileSlug = formData.get("turfProfileSlug");
+    const redirectTo = formData.get("redirect") as string | null;
 
     if (!turfProfileSlug) {
       return { success: false, message: "Missing turf profile slug" };
     }
 
-    // Validate email/password using Zod
+    // Validate email/password
     const validation = zodValidator(
       { email, password },
       loginValidationZodSchema
     );
-
     if (!validation.success) return validation;
 
-    // Build full body (validation data + slug)
+    // Prepare request body
     const body = JSON.stringify({
       ...validation.data,
-      turfProfileSlug, // <-- FIXED! Now included
+      turfProfileSlug,
     });
-
-    console.log("checkAPI", body)
 
     // Call backend Turf User login API
     const res = await serverFetch.post("auth/login/turf-user", {
@@ -44,13 +40,9 @@ export const turfUserlogin = async (_currentState: any, formData: any) => {
     });
 
     const result = await res.json();
-    console.log("checkAPIResult", result)
-
     if (!result.success) return result;
 
-    console.log("checkAPIResult", result)
-
-    // Extract cookies
+    // Parse Set-Cookie headers
     const setCookieHeaders = res.headers.getSetCookie();
     if (!setCookieHeaders) throw new Error("Backend did not send cookies");
 
@@ -59,7 +51,6 @@ export const turfUserlogin = async (_currentState: any, formData: any) => {
 
     setCookieHeaders.forEach((cookieStr: string) => {
       const parsed = parse(cookieStr);
-
       if (parsed["turfUserAccess"]) accessParsed = parsed;
       if (parsed["turfUserRefresh"]) refreshParsed = parsed;
     });
@@ -68,7 +59,7 @@ export const turfUserlogin = async (_currentState: any, formData: any) => {
       throw new Error("Missing turfUser cookies");
     }
 
-    // Store cookies in Next.js
+    // Set cookies
     await setCookie("turfUserAccess", accessParsed["turfUserAccess"], {
       httpOnly: true,
       secure: true,
@@ -85,12 +76,13 @@ export const turfUserlogin = async (_currentState: any, formData: any) => {
       sameSite: refreshParsed["SameSite"] ?? "strict",
     });
 
-    // Done
-    return {
-      success: true,
-      message: "Turf user login successful",
-      turfProfileSlug,
-    };
+    // Redirect after successful login
+    if (redirectTo) {
+      redirect(redirectTo);
+    } else {
+      // Default redirect to turf-user dashboard
+      redirect(`/${turfProfileSlug}/user-dashboard`);
+    }
   } catch (err: any) {
     if (err?.digest?.startsWith("NEXT_REDIRECT")) throw err;
 
