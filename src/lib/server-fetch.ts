@@ -1,6 +1,6 @@
 import { getCookie } from "@/services/auth/tokenHandlers";
 
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL || "http://localhost:5000/api/v1";
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL || "http://localhost:5000/api/v1/";
 
 // Define allowed token types
 type AccessTokenType = "ownerAccess" | "managerAccess" | "turfUserAccess" | "adminAccess";
@@ -13,19 +13,23 @@ const serverFetchHelper = async (
 ): Promise<Response> => {
     const { headers, ...restOptions } = options;
 
+
+
+
     // get the correct access token from cookies
     const accessToken = await getCookie(tokenType);
 
+
+
     const response = await fetch(`${BACKEND_API_URL}${endpoint}`, {
         headers: {
-            Cookie: accessToken ? `accessToken=${accessToken}` : "",
             ...headers,
+            ...(accessToken ? { Cookie: `${tokenType}=${accessToken}` } : {}),
             // ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
         },
         ...restOptions,
     });
 
-   
     return response;
 
 };

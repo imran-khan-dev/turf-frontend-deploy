@@ -8,7 +8,6 @@ import turfUserlogin from "./turfUserLogin";
 
 export const turfUserRegister = async (_currentState: any, formData: any) => {
 
-    console.log("checkregisterform", formData)
 
     try {
         const file = formData.get("file");
@@ -51,7 +50,6 @@ export const turfUserRegister = async (_currentState: any, formData: any) => {
 
         const res = await serverFetch.post("turf-user/register", { body: newFormData }, "turfUserAccess")
 
-        console.log("registerTest", res)
 
         const result = await res.json();
 

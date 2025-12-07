@@ -7,7 +7,6 @@ import { toast } from "sonner";
 const LoginSuccessToast = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  console.log("searchParm", searchParams)
 
   useEffect(() => {
     if (searchParams.get("loggedIn") === "true") {

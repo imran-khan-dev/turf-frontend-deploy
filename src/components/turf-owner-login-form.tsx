@@ -32,8 +32,6 @@ const UserLoginForm = ({ redirect }: { redirect?: string }) => {
     }
   }, [state]);
 
-  console.log("state", state?.success);
-
   return (
     <form action={formAction}>
       {redirect && <input type="hidden" name="redirect" value={redirect} />}

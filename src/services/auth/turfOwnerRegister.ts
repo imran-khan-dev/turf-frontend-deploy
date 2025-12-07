@@ -46,7 +46,6 @@ export const turfOwnerRegister = async (_currentState: any, formData: any) => {
 
         const res = await serverFetch.post("user/register-owner", { body: newFormData }, "ownerAccess")
 
-        console.log("registerTest", res)
 
         const result = await res.json();
 

@@ -26,13 +26,10 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  console.log("pathcheck", pathname)
-
   // ---- 2️⃣ Get token based on route type ----
   const tokenType = getTokenTypeFromPath(pathname);
   const accessToken = await getCookie(tokenType);
 
-  console.log("tokencheck", tokenType)
 
   let userRole: UserRole = null;
 

@@ -11,6 +11,7 @@ export default function LogoutButton({
 }) {
   const router = useRouter();
 
+
   const handleLogout = async () => {
     try {
       await logoutUser(role);

@@ -1,34 +1,69 @@
-import OwnerSidebar from "@/components/modules/dashboard/sidebar/OwnerSidebar";
-import OwnerNavbar from "@/components/modules/dashboard/navbar/OwnerNavbar";
-import { getCookie } from "@/services/auth/tokenHandlers";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// /* eslint-disable @typescript-eslint/no-explicit-any */
+// import { getCookie } from "@/services/auth/tokenHandlers";
+// import { getUserFromToken } from "@/services/auth/getUserFromToken";
+// import Sidebar from "@/components/modules/dashboard/sidebar/Sidebar";
+// import Navbar from "@/components/modules/dashboard/navbar/Navbar";
+
+// // Map backend uppercase role → frontend camelCase role
+// function mapRole(tokenRole: string | undefined) {
+//   if (!tokenRole) return null;
+
+//   const roleMap: Record<string, "owner" | "manager" | "turfUser" | "admin"> = {
+//     OWNER: "owner",
+//     MANAGER: "manager",
+//     ADMIN: "admin",
+//     TURF_USER: "turfUser",
+//   };
+
+//   return roleMap[tokenRole] ?? null;
+// }
+
+// export default async function DashboardLayout({ children }: any) {
+//   const accessToken = await getCookie("ownerAccess");
+//   const user = accessToken ? getUserFromToken(accessToken) : null;
+
+//   const role = mapRole(user?.role);
+
+//   return (
+//     <div className="flex h-screen">
+//       <Sidebar role={role!} />
+//       <div className="flex-1 flex flex-col">
+//         <Navbar user={user} />
+//         <main className="flex-1 overflow-y-auto p-6 bg-muted/10">
+//           {children}
+//         </main>
+//       </div>
+//     </div>
+//   );
+// }
+
+import DashboardShell from "@/components/modules/dashboard/DashboardShell";
 import { getUserFromToken } from "@/services/auth/getUserFromToken";
+import { getCookie } from "@/services/auth/tokenHandlers";
 
-export default async function OwnerDashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function mapRole(tokenRole: string | undefined) {
+  if (!tokenRole) return null;
+
+  const roleMap: Record<string, "owner" | "manager" | "turfUser" | "admin"> = {
+    OWNER: "owner",
+    MANAGER: "manager",
+    ADMIN: "admin",
+    TURF_USER: "turfUser",
+  };
+
+  return roleMap[tokenRole] ?? null;
+}
+
+export default async function DashboardLayout({ children }: any) {
   const accessToken = await getCookie("ownerAccess");
+  const user = accessToken ? getUserFromToken(accessToken) : null;
 
-  if (!accessToken) {
-    return console.log("No owner found Invalid token");
-  }
-
-  console.log("ownerAccess", accessToken);
-
-  const user = getUserFromToken(accessToken);
-
-  console.log("userCheck", user);
+  const role = mapRole(user?.role);
 
   return (
-    <div className="flex h-screen">
-      <OwnerSidebar />
-      <div className="flex-1 flex flex-col">
-        <OwnerNavbar user={user} />
-        <main className="flex-1 overflow-y-auto p-6 bg-muted/10">
-          {children}
-        </main>
-      </div>
-    </div>
+    <DashboardShell user={user} role={role}>
+      {children}
+    </DashboardShell>
   );
 }

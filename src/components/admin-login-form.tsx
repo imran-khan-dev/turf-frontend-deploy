@@ -75,7 +75,7 @@ const AdminLoginForm = ({ redirect }: { redirect?: string }) => {
               {isPending ? "Logging in..." : "Login"}
             </Button>
 
-            <FieldDescription className="px-6 text-center">
+            {/* <FieldDescription className="px-6 text-center">
               Don&apos;t have an account?{" "}
               <a
                 href="owner/register"
@@ -83,7 +83,7 @@ const AdminLoginForm = ({ redirect }: { redirect?: string }) => {
               >
                 Sign up
               </a>
-            </FieldDescription>
+            </FieldDescription> */}
             {/* <FieldDescription className="px-6 text-center">
               <a
                 href="/forget-password"
