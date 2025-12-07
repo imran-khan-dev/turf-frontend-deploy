@@ -38,9 +38,6 @@ const serverFetchHelper = async (
 
 
 
-
-
-
 // Expose methods for HTTP verbs
 export const serverFetch = {
     get: async (endpoint: string, options: RequestInit = {}, tokenType?: AccessTokenType) =>

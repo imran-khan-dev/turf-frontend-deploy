@@ -101,7 +101,7 @@ const TurfUserRegisterForm = ({
 
           {/* Photo (optional) */}
           <Field className="md:col-span-2">
-            <FieldLabel htmlFor="file">Photo (optional)</FieldLabel>
+            <FieldLabel htmlFor="file">Photo</FieldLabel>
             <Input id="file" name="file" type="file" accept="image/*" />
             {getFieldError("photo") && (
               <FieldDescription className="text-red-600">

@@ -44,15 +44,18 @@ export const turfUserRegister = async (_currentState: any, formData: any) => {
         newFormData.append("phone", formData.get("phone") || "");
         newFormData.append("turfProfileSlug", formData.get("turfProfileSlug"));
 
+        console.log("filecheck", file)
+
         if (file) {
             newFormData.append("file", file);
         }
 
         const res = await serverFetch.post("turf-user/register", { body: newFormData }, "turfUserAccess")
 
-
+        console.log("rescheck", res);
         const result = await res.json();
 
+        console.log("result", result);
 
         if (result.success) {
             const loginData = new FormData();

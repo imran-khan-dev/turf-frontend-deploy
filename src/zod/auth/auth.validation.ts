@@ -5,7 +5,7 @@ export const registerTurfOwnerValidationZodSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
     email: z.email({ message: "Valid email is required" }),
     phone: z.string().min(10, { message: "Valid phone number is required" }),
-    photo: z.any().optional(),
+    photo: z.any(),
     password: z.string().min(6, {
         error: "Password is required and must be at least 6 characters long",
     }).max(100, {
@@ -23,7 +23,7 @@ export const registerTurfUserValidationZodSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
     email: z.email({ message: "Valid email is required" }),
     phone: z.string().min(10, { message: "Valid phone number is required" }),
-    photo: z.any().optional(),
+    photo: z.any(),
     turfProfileSlug: z.string().min(1, { message: "Turf profile slug is required" }),
     password: z.string().min(6, {
         error: "Password is required and must be at least 6 characters long",
