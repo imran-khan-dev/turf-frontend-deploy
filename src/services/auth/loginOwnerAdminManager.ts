@@ -98,13 +98,14 @@ const loginOwnerAdminManager = async (_currentState: any, formData: any) => {
 
     //REDIRECT AFTER SUCCESS 
     if (redirectTo) {
-      redirect(redirectTo); // redirect to original page
+      const requestedPath = redirectTo.toString();
+      redirect(`${requestedPath}?loggedIn=true`);
     }
 
     // ---- Default redirect per role ----
-    if (role === "owner") redirect("/dashboard/owner");
-    if (role === "manager") redirect("/dashboard/manager");
-    if (role === "admin") redirect("/dashboard/admin");
+    if (role === "owner") redirect("/dashboard/owner?loggedIn=true");
+    if (role === "manager") redirect("/dashboard/manager?loggedIn=true");
+    if (role === "admin") redirect("/dashboard/admin?loggedIn=true");
 
   } catch (err: any) {
     if (err?.digest?.startsWith("NEXT_REDIRECT")) throw err;
