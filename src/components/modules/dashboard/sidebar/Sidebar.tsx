@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { dashboardConfig } from "@/services/dashboard/dashboardConfig";
-import LogoutButton from "../logout/logoutButton";
+import LogoutButton from "../Logout/LogoutButton";
 
 export default function Sidebar({ role, open, setOpen }: any) {
   if (!role) return null;

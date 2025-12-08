@@ -1,4 +1,4 @@
-import TurfUserRegisterForm from "@/components/turf-user-register-form";
+import TurfUserRegisterForm from "@/components/modules/TurfUserAuth/TurfUserRegistrationForm";
 import {
   Card,
   CardContent,

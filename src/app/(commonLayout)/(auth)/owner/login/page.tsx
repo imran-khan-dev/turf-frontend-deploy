@@ -1,4 +1,4 @@
-import UserLoginForm from "@/components/turf-owner-login-form";
+import UserLoginForm from "@/components/modules/TurfOwnerAuth/TurfOwnerLoginForm";
 
 const OwnerLoginPage = async ({
   searchParams,

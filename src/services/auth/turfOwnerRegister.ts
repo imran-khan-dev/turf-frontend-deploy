@@ -40,9 +40,13 @@ export const turfOwnerRegister = async (_currentState: any, formData: any) => {
         newFormData.append("password", formData.get("password"));
         newFormData.append("phone", formData.get("phone") || "");
 
-        if (file) {
+        if (file instanceof File && file.size > 0) {
             newFormData.append("file", file);
+        } else {
+            // append empty blob so backend sees the field
+            newFormData.append("file", new Blob(), "");
         }
+
 
         const res = await serverFetch.post("user/register-owner", { body: newFormData }, "ownerAccess")
 

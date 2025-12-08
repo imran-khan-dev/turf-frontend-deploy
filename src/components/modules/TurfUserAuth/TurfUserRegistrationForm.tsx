@@ -2,34 +2,37 @@
 "use client";
 
 import { useActionState, useEffect } from "react";
-import { Button } from "./ui/button";
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "./ui/field";
-import { Input } from "./ui/input";
-import { turfOwnerRegister } from "@/services/auth/turfOwnerRegister";
+import { Button } from "../../ui/button";
+import { Field, FieldDescription, FieldGroup, FieldLabel } from "../../ui/field";
+import { Input } from "../../ui/input";
+import turfUserRegister from "@/services/auth/turfUserRegister";
 import { toast } from "sonner";
 
-const TurfOwnerRegisterForm = () => {
-  const [state, formAction, isPending] = useActionState(
-    turfOwnerRegister,
-    null
-  );
+const TurfUserRegisterForm = ({
+  turfProfileSlug,
+}: {
+  turfProfileSlug: string;
+}) => {
+  const [state, formAction, isPending] = useActionState(turfUserRegister, null);
 
   const getFieldError = (fieldName: string) => {
     if (state && "errors" in state && state.errors) {
       const error = state.errors.find((err: any) => err.field === fieldName);
-      return error ? error.message : null;
+      return error?.message;
+    } else {
+      return null;
     }
-    return null;
   };
 
   useEffect(() => {
-    if (state && !state.success && state.message) {
+    if (state && !state.success && "message" in state && state.message) {
       toast.error(state.message);
     }
   }, [state]);
-
+  
   return (
     <form action={formAction} encType="multipart/form-data">
+      <input type="hidden" name="turfProfileSlug" value={turfProfileSlug} />
       <FieldGroup>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Name */}
@@ -116,7 +119,10 @@ const TurfOwnerRegisterForm = () => {
 
             <FieldDescription className="px-6 text-center">
               Already have an account?{" "}
-              <a href="/owner/login" className="text-blue-600 hover:underline">
+              <a
+                href={`/${turfProfileSlug}/turf-user/login`}
+                className="text-blue-600 hover:underline"
+              >
                 Sign in
               </a>
             </FieldDescription>
@@ -127,4 +133,4 @@ const TurfOwnerRegisterForm = () => {
   );
 };
 
-export default TurfOwnerRegisterForm;
+export default TurfUserRegisterForm;

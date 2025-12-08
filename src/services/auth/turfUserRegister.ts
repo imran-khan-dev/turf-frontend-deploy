@@ -46,11 +46,16 @@ export const turfUserRegister = async (_currentState: any, formData: any) => {
 
         console.log("filecheck", file)
 
-        if (file) {
+        if (file instanceof File && file.size > 0) {
             newFormData.append("file", file);
+        } else {
+            newFormData.append("file", new Blob(), "");
         }
 
-        const res = await serverFetch.post("turf-user/register", { body: newFormData }, "turfUserAccess")
+
+        console.log("formData", newFormData)
+
+        const res = await serverFetch.post("turf-user/register", { body: newFormData })
 
         console.log("rescheck", res);
         const result = await res.json();
