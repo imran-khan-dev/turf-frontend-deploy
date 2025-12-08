@@ -11,10 +11,16 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+
 interface TurfField {
   name: string;
   pricePerSlot: number;
   available: boolean;
+  photos?: string[];
 }
 
 interface TurfProfile {
@@ -170,16 +176,48 @@ export default function TurfProfileHome({ profile }: TurfProfileProps) {
           <h2 className="text-3xl text-center font-bold text-[#1A80E3] mb-8">
             Our Fields
           </h2>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {(profile.turfFields || []).map((field, i) => (
               <div
                 key={i}
                 className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition"
               >
+                {/* Field Carousel */}
+                <div className="w-full h-48 mb-4 relative">
+                  {field.photos && field.photos.length > 0 ? (
+                    <Swiper
+                      spaceBetween={10}
+                      slidesPerView={1}
+                      loop
+                      pagination={{ clickable: true }}
+                      navigation
+                      className="w-full h-full rounded-lg overflow-hidden"
+                    >
+                      {field.photos.map((photo, idx) => (
+                        <SwiperSlide key={idx}>
+                          <Image
+                            src={photo}
+                            alt={field.name}
+                            fill
+                            className="object-cover"
+                          />
+                        </SwiperSlide>
+                      ))}
+                    </Swiper>
+                  ) : (
+                    <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
+                      No Image
+                    </div>
+                  )}
+                </div>
+
                 <h3 className="text-xl font-semibold">{field.name}</h3>
+
                 <p className="mt-2 text-gray-600">
                   Price per Slot: {field.pricePerSlot} BDT
                 </p>
+
                 <p
                   className={`mt-1 font-medium ${
                     field.available ? "text-green-600" : "text-red-500"
@@ -196,7 +234,7 @@ export default function TurfProfileHome({ profile }: TurfProfileProps) {
       {/* Contact */}
       <section id="contact" className="py-24 bg-white">
         <div className="container mx-auto px-4 max-w-3xl">
-          <h2 className="text-3xl font-bold text-[#1A80E3] mb-8">Contact</h2>
+          <h2 className="text-3xl font-bold text-center text-[#1A80E3] mb-8">Contact</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {/* Address */}

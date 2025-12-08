@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import TurfHomepage from "@/components/modules/TurfProfilePublicPage/TurfProfilePublicPage";
 import serverFetch from "@/lib/server-fetch";
 import Link from "next/link";
@@ -29,6 +30,7 @@ export default async function Page({ params }: PageProps) {
   const { turfProfileSlug } = await params;
 
   let profileData: typeof dummyProfile | null = null;
+  let turfFields: any | null = null;
 
   console.log("turfProfileSlug", turfProfileSlug);
 
@@ -36,8 +38,6 @@ export default async function Page({ params }: PageProps) {
     const res = await serverFetch.get(
       `turf-profile/get-turf-profile/${turfProfileSlug}`
     );
-
-    console.log("res", res);
 
     if (res.ok) {
       const json = await res.json();
@@ -47,7 +47,22 @@ export default async function Page({ params }: PageProps) {
     console.error("Error fetching turf profile:", err);
   }
 
-  console.log("pD", profileData);
+  const trufProfileId = profileData?.id;
+
+  console.log("tpId", trufProfileId);
+  try {
+    const res = await serverFetch.get(`turf-field/get-fields/${trufProfileId}`);
+
+    console.log("res", res);
+    if (res.ok) {
+      const json = await res.json();
+      turfFields = json;
+    }
+  } catch (err) {
+    console.error("Error fetching turf fields:", err);
+  }
+
+  console.log("pD", turfFields);
 
   // If profile not found, show friendly 404-like message
   if (!profileData) {
@@ -68,5 +83,12 @@ export default async function Page({ params }: PageProps) {
     );
   }
 
-  return <TurfHomepage profile={profileData} />;
+  return (
+    <TurfHomepage
+      profile={{
+        ...profileData,
+        turfFields: turfFields?.data || [],
+      }}
+    />
+  );
 }
