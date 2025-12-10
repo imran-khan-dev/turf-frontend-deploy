@@ -1,9 +1,9 @@
-import React from 'react'
+import DeleteAdminForm from "@/components/modules/Admin/DeleteAdminForm";
 
-export default function page() {
+export default function DeleteAdminPage() {
   return (
-    <div>
-      
+    <div className="p-6">
+      <DeleteAdminForm />
     </div>
-  )
+  );
 }
