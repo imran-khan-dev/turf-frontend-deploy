@@ -20,7 +20,9 @@ export default async function OwnerBookingsPage() {
 
   return (
     <div className="rounded-xl border border-[#1A80E3]/30 shadow-lg p-4">
-      <h2 className="text-xl font-semibold mb-4 text-[#1A80E3]">All Bookings</h2>
+      <h2 className="text-xl font-semibold mb-4 text-[#1A80E3]">
+        All Bookings
+      </h2>
       <BookingsTableOwner initialBookings={bookings} />
     </div>
   );
