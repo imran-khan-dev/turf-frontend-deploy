@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
@@ -5,6 +6,8 @@ import PublicNavbar from "@/components/shared/PublicNavbar";
 import PublicFooter from "@/components/shared/PublicFooter";
 import { Toaster } from "sonner";
 import LogoutSuccessToast from "@/components/shared/LogoutSuccessToast";
+import { Suspense } from "react";
+import LoginSuccessToast from "@/components/shared/LoginSuccessToast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,8 +36,11 @@ export default function RootLayout({
       >
         <PublicNavbar />
         {children}
+        <Suspense fallback={null}>
         <Toaster position="bottom-right" richColors />
+        <LoginSuccessToast />
         <LogoutSuccessToast/>
+        </Suspense>
         <PublicFooter />
       </body>
     </html>

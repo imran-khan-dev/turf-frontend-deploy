@@ -1,11 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import loginOwnerAdminManager from "@/services/auth/loginOwnerAdminManager";
 import { useActionState, useEffect } from "react";
 import { Button } from "../../ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "../../ui/field";
 import { Input } from "../../ui/input";
 import { toast } from "sonner";
+import Link from "next/link";
 
 const UserLoginForm = ({ redirect }: { redirect?: string }) => {
   const [state, formAction, isPending] = useActionState(
@@ -81,12 +84,12 @@ const UserLoginForm = ({ redirect }: { redirect?: string }) => {
 
             <FieldDescription className="px-6 text-center">
               Don&apos;t have an account?{" "}
-              <a
+              <Link
                 href="/owner/register"
                 className="text-blue-600 hover:underline"
               >
                 Sign up
-              </a>
+              </Link>
             </FieldDescription>
             {/* <FieldDescription className="px-6 text-center">
               <a
