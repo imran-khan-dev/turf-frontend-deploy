@@ -4,11 +4,7 @@ import serverFetch from "@/lib/server-fetch";
 
 export default async function AdminDashboardPage() {
   // ---- 1. Owners ----
-  const ownersRes = await serverFetch.get(
-    "user/get-owners",
-    {},
-    "adminAccess"
-  );
+  const ownersRes = await serverFetch.get("user/get-owners", {}, "adminAccess");
   const ownersData = await ownersRes.json();
   const owners = ownersData?.data ?? [];
 
