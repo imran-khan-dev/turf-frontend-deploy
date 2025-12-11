@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import BookingsTable from "@/components/modules/Booking/BookingsTable";
+import BookingsTableOwner from "@/components/modules/Booking/BookingsTableOwner";
 import serverFetch from "@/lib/server-fetch";
 
 export default async function OwnerBookingsPage() {
@@ -21,7 +21,7 @@ export default async function OwnerBookingsPage() {
   return (
     <div className="rounded-xl border border-[#1A80E3]/30 shadow-lg p-4">
       <h2 className="text-xl font-semibold mb-4 text-[#1A80E3]">All Bookings</h2>
-      <BookingsTable initialBookings={bookings} />
+      <BookingsTableOwner initialBookings={bookings} />
     </div>
   );
 }
