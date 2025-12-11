@@ -19,7 +19,7 @@ export async function payNowAction(formData: FormData) {
 
   const json = await res.json();
 
-  if (!json?.url) throw new Error("Payment URL missing");
+  if (!json?.url) throw new Error("Payment URL missing from Bkash");
 
   redirect(json.url);
 }

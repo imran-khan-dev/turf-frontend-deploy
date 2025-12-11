@@ -28,7 +28,6 @@ interface Props {
   initialBookings: Booking[];
 }
 
-
 export default function BookingsTable({ initialBookings }: Props) {
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [minAmount, setMinAmount] = useState<number | "">("");
