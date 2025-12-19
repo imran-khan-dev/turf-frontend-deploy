@@ -172,7 +172,11 @@ export default function TurfProfilePublicPage({ profile }: TurfProfileProps) {
 
       {/* About */}
       <section id="about" className="py-24 bg-white">
+         <h2 className="text-3xl text-center font-bold text-[#1A80E3] mb-8">
+            About Us
+          </h2>
         <div className="container mx-auto flex flex-col md:flex-row items-center gap-8 px-4">
+          
           {profile.aboutImg && (
             <div className="w-full md:w-1/2 h-64 relative">
               <Image

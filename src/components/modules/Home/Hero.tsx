@@ -1,4 +1,9 @@
+"use client";
+
 import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import CountUp from "react-countup";
 import { HeroProps } from "@/types/heroProps";
 import { SparkleIcon } from "@/assets/icons/SparkleIcon";
 
@@ -22,25 +27,31 @@ export function Hero({
 }: HeroProps) {
   return (
     <div className="w-full relative overflow-hidden">
-      {/* Hero Image Background */}
+      {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
           src="/turf-field.jpg"
           alt="Turf Field"
           fill
+          priority
           className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/40 to-black/10" />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 w-full">
+      <div className="relative z-10">
         <div className="container mx-auto px-4 py-16 md:px-8 lg:px-16">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
             {/* Left Column */}
-            <div className="flex flex-col justify-center space-y-4 md:space-y-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="flex flex-col justify-center space-y-5"
+            >
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 self-start rounded-full bg-white px-3 py-1">
+              <div className="inline-flex items-center gap-2 self-start rounded-full bg-white px-3 py-1 transition hover:shadow-sm">
                 <SparkleIcon />
                 <span className="text-xs font-medium text-blue-700">
                   {badge.text}
@@ -48,7 +59,7 @@ export function Hero({
               </div>
 
               {/* Heading */}
-              <div className="space-y-1">
+              <div>
                 <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight">
                   {heading.line1}
                 </h1>
@@ -58,48 +69,58 @@ export function Hero({
               </div>
 
               {/* Description */}
-              <p className="text-white text-base md:text-lg max-w-lg">
+              <p className="text-white/90 text-base md:text-lg max-w-lg">
                 {description.join(" ")}
               </p>
 
-              {/* Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 mt-4">
-                {/* Get Started Button */}
-                <a
+              {/* CTA */}
+              <div className="flex flex-col sm:flex-row gap-4 pt-2">
+                <Link
                   href="/owner/register"
-                  className="bg-[#0C78E1] hover:bg-blue-700 shadow-md text-white rounded-xl px-8 py-3 font-medium transition-all duration-300 transform hover:-translate-y-0.5 text-center"
+                  className="bg-[#0C78E1] text-white rounded-xl px-8 py-3 font-medium
+                             transition-all duration-300
+                             hover:bg-blue-700 hover:-translate-y-0.5 hover:shadow-lg
+                             active:scale-95 text-center"
                 >
                   Get Started
-                </a>
+                </Link>
 
-                {/* Learn More Link */}
-                <a
+                <Link
                   href="/about-us"
-                  className="self-center text-white text-lg font-medium hover:underline transition-colors duration-300"
+                  className="self-center text-white text-lg font-medium
+                             underline-offset-4 hover:underline transition"
                 >
                   Learn More
-                </a>
+                </Link>
               </div>
 
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-4 mt-6">
+              {/* Stats with CountUp */}
+              <div className="grid grid-cols-3 gap-4 pt-6">
                 {stats.map((stat, index) => (
-                  <div key={index} className="space-y-1">
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 + index * 0.1 }}
+                    className="space-y-1"
+                  >
                     <p className="text-2xl md:text-3xl font-semibold text-white">
-                      {stat.value}
+                      <CountUp
+                        end={parseInt(stat.value)}
+                        duration={1.5}
+                        suffix="+"
+                        enableScrollSpy
+                        scrollSpyOnce
+                      />
                     </p>
                     <p className="text-sm text-white/80">{stat.label}</p>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
-            {/* Right Column - Optional Illustration or Empty */}
-            <div className="hidden lg:flex items-center justify-end">
-              <div className="w-full max-w-md">
-                {/* Optional: Add illustration or leave empty for minimal hero */}
-              </div>
-            </div>
+            {/* Right Column (intentionally empty for minimal design) */}
+            <div className="hidden lg:block" />
           </div>
         </div>
       </div>

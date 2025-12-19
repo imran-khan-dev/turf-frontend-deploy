@@ -62,7 +62,7 @@ export default async function Page({ params }: PageProps) {
 
     if (res.ok) {
       const json = await res.json();
-      profileData = json.data; // <-- extract the actual profile object
+      profileData = json.data; 
     }
   } catch (err) {
     console.error("Error fetching turf profile:", err);
