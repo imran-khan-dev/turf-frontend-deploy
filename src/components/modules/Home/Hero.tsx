@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { HeroProps } from "@/types/heroProps";
-import { LargeSparkleIcon, SparkleIcon } from "@/assets/icons/SparkleIcon";
+import { SparkleIcon } from "@/assets/icons/SparkleIcon";
 
 export function Hero({
   badge = {
@@ -34,8 +34,8 @@ export function Hero({
       </div>
 
       {/* Content */}
-      <div className="relative z-10 w-full px-4 py-16 md:px-8 lg:px-16">
-        <div className="mx-auto max-w-[1200px]">
+      <div className="relative z-10 w-full">
+        <div className="container mx-auto px-4 py-16 md:px-8 lg:px-16">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
             {/* Left Column */}
             <div className="flex flex-col justify-center space-y-4 md:space-y-6">

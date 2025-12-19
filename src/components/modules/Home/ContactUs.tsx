@@ -40,8 +40,8 @@ const ContactCard = ({ item }: { item: typeof contactItems[0] }) => (
 
 const ContactUs = () => {
   return (
-    <section id='contact' className="py-12 bg-gradient-to-b from-white to-blue-50/50">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section id='contact' className="w-full py-24 bg-card">
+      <div className="container mx-auto px-4 md:px-8 lg:px-16">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto">
           <h2 className="text-3xl font-bold text-foreground">Contact Us</h2>

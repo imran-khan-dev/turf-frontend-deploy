@@ -46,8 +46,8 @@ const StepCard = ({ icon: Icon, title, description, index }: { icon: React.Eleme
 
 const Steps = () => {
   return (
-    <section className="py-20 bg-gradient-to-b from-blue-50/50 to-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="w-full py-24">
+      <div className="container mx-auto px-4 md:px-8 lg:px-16">
         <div className="text-center max-w-2xl mx-auto">
           <h2 className="text-3xl font-bold text-foreground">Simple Steps to Manage Your Turf</h2>
           <p className="text-muted-foreground mt-3">
