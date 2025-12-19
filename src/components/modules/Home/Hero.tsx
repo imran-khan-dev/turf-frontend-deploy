@@ -3,28 +3,28 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import CountUp from "react-countup";
 import { HeroProps } from "@/types/heroProps";
 import { SparkleIcon } from "@/assets/icons/SparkleIcon";
+// import { CheckIcon } from "@/assets/icons/CheckIcon";
 
 export function Hero({
   badge = {
-    text: "Turf Booking SaaS",
+    text: "Professional Turf Management Platform",
   },
   heading = {
-    line1: "Manage Your Turf",
-    line2: "Bookings Effortlessly",
+    line1: "Manage Your Turf Bookings",
+    line2: "Effortlessly and Professionally",
   },
   description = [
-    "A simple and powerful platform for turf owners to manage bookings,",
-    "track users, and grow their turf business online.",
+    "A powerful platform for turf sports businesses to manage bookings,",
+    "track customers, and grow their turf operations online.",
   ],
-  stats = [
-    { value: "100+", label: "Turf Owners" },
-    { value: "500+", label: "Registered Users" },
-    { value: "50+", label: "Turf Profiles" },
+  features = [
+    "Built for Turf Businesses",
+    "Centralized Booking Management",
+    "Secure bKash Payments",
   ],
-}: HeroProps) {
+}: HeroProps & { features?: string[] }) {
   return (
     <div className="w-full relative overflow-hidden">
       {/* Background Image */}
@@ -94,26 +94,18 @@ export function Hero({
                 </Link>
               </div>
 
-              {/* Stats with CountUp */}
-              <div className="grid grid-cols-3 gap-4 pt-6">
-                {stats.map((stat, index) => (
+              {/* Features / Stats Section */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
+                {features.map((feature, index) => (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 + index * 0.1 }}
-                    className="space-y-1"
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 + index * 0.1 }}
+                    className="flex items-center gap-3 bg-white/10 rounded-xl px-4 py-3 hover:bg-white/20"
                   >
-                    <p className="text-2xl md:text-3xl font-semibold text-white">
-                      <CountUp
-                        end={parseInt(stat.value)}
-                        duration={1.5}
-                        suffix="+"
-                        enableScrollSpy
-                        scrollSpyOnce
-                      />
-                    </p>
-                    <p className="text-sm text-white/80">{stat.label}</p>
+                    {/* <CheckIcon className="w-6 h-6 text-green-400 flex-shrink-0" /> */}
+                    <span className="text-white font-medium">{feature}</span>
                   </motion.div>
                 ))}
               </div>
