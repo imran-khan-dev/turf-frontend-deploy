@@ -3,365 +3,355 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import { motion } from "framer-motion";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Facebook,
+  Instagram,
+  MessageCircle,
+  DollarSign,
+  Clock,
+} from "lucide-react";
 
 interface TurfField {
-  id: any;
+  id: string;
   name: string;
   pricePerSlot: number;
+  slotDuration: number;
   available: boolean;
+  openHour?: string;
+  closeHour?: string;
   photos?: string[];
 }
 
 interface TurfProfile {
-  // Basic Info
   id: string;
   name?: string;
   slug?: string;
-
-  // Contact
-  phone: string;
-  email: string;
-  whatsappLink: string;
-
-  // Social Links
-  facebookLink: string;
-  instagramLink: string;
-
-  // Media Assets
+  phone?: string;
+  email?: string;
+  whatsappLink?: string;
+  facebookLink?: string;
+  instagramLink?: string;
   logo?: string;
   heroImage?: string;
-
-  // About Section
   aboutTitle?: string;
   aboutDesc?: string;
   aboutImg?: string;
-
-  // Turf Details
-  openHours?: string;
   turfFields?: TurfField[];
-
-  // Location
   address?: string;
   googleMapLink?: string;
 }
 
-
 interface TurfProfileProps {
   profile: TurfProfile;
+  turfUser?: any;
 }
 
-export default function TurfProfilePublicPage({ profile }: TurfProfileProps) {
-  const scrollToTurfFields = () => {
-    const section = document.getElementById("turf-fields");
-    section?.scrollIntoView({ behavior: "smooth" });
-  };
+export default function TurfProfilePublicPage({
+  profile,
+  turfUser,
+}: TurfProfileProps) {
   const router = useRouter();
-  const handleBookField = (field: TurfField) => {
+  const scrollToFields = () =>
+    document
+      .getElementById("turf-fields")
+      ?.scrollIntoView({ behavior: "smooth" });
+  const handleBookField = (field: TurfField) =>
     router.push(`/${profile.slug}/book/${field.id}`);
-  };
 
   return (
-    <div className="w-full font-sans">
-      {/* Navbar */}
-      <header className="sticky top-0 z-50 w-full bg-white border-b shadow-md">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <span className="text-xl font-bold text-[#1A80E3]">
-            {profile.name || "Turf App"}
-          </span>
-
-          <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-            <a href="#turf-fields" className="hover:text-[#1A80E3]">
-              Turf
-            </a>
-            <a href="#about" className="hover:text-[#1A80E3]">
-              About Us
-            </a>
-            <a href="#contact" className="hover:text-[#1A80E3]">
-              Contact
-            </a>
-          </nav>
-
-          {profile.slug && (
-            <Link
-              href={`/${profile.slug}/turf-user/login`}
-              className="hidden md:block"
-            >
-              <Button className="bg-[#1A80E3] hover:bg-blue-700 text-white">
-                Login
-              </Button>
-            </Link>
-          )}
-
-          {/* Mobile Menu */}
-          <div className="md:hidden">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline">
-                  <Menu />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-64 p-4">
-                <SheetTitle className="sr-only">Navigation</SheetTitle>
-                <nav className="flex flex-col space-y-4 mt-8">
-                  <a href="#turf-fields" className="text-lg font-medium">
-                    Turf
-                  </a>
-                  <a href="#about" className="text-lg font-medium">
-                    About Us
-                  </a>
-                  <a href="#contact" className="text-lg font-medium">
-                    Contact
-                  </a>
-                  {profile.slug && (
-                    <Link
-                      href={`/${profile.slug}/turf-user/login`}
-                      className="mt-4"
-                    >
-                      <Button className="w-full bg-[#1A80E3] hover:bg-blue-700 text-white">
-                        Login
-                      </Button>
-                    </Link>
-                  )}
-                </nav>
-              </SheetContent>
-            </Sheet>
-          </div>
-        </div>
-      </header>
-
-      {/* Hero */}
-      <section className="relative w-full h-[500px] bg-gray-100 flex items-center">
+    <div className="font-sans w-full">
+      {/* Hero Section */}
+      <section className="relative min-h-[500px] md:min-h-[550px]">
         {profile.heroImage && (
           <Image
             src={profile.heroImage}
-            alt={profile.name || "Your Turf Name"}
+            alt={profile.name || "Turf Venue"}
             fill
-            className="object-cover"
+            className="object-cover object-center"
           />
         )}
-        <div className="container mx-auto relative z-10 text-white px-4">
-          <h1 className="text-5xl font-bold">
-            {profile.name || "Your Turf Name"}
-          </h1>
-          <p className="text-lg mt-4">
-            {profile.address || "Your Turf Address"}
-          </p>
-          <Button
-            className="mt-6 bg-[#1A80E3] hover:bg-blue-700"
-            onClick={scrollToTurfFields}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex flex-col justify-center items-center text-center px-4 md:px-8 lg:px-16">
+          {profile.logo && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1 }}
+              className="w-28 h-28 md:w-32 md:h-32 mb-6 rounded-full overflow-hidden border-4 border-white shadow-lg"
+            >
+              <Image
+                src={profile.logo}
+                alt="Turf Logo"
+                width={128}
+                height={128}
+                className="object-cover"
+              />
+            </motion.div>
+          )}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.3 }}
+            className="text-white text-4xl md:text-5xl lg:text-6xl font-bold mb-3 drop-shadow-lg"
           >
-            View Fields
-          </Button>
+            {profile.name}
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="text-white/90 text-base md:text-lg mb-6 drop-shadow-md"
+          >
+            {profile.address}
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.7 }}
+            className="flex gap-4 flex-wrap justify-center"
+          >
+            <Button
+              onClick={scrollToFields}
+              className="bg-[#1A80E3] hover:bg-blue-700 text-white shadow-lg"
+            >
+              View Fields
+            </Button>
+            <Link
+              href={profile.slug ? `/${profile.slug}/turf-user/login` : "#"}
+            >
+              <Button className="bg-white text-[#1A80E3] hover:bg-gray-100 shadow-lg">
+                {turfUser ? "My Bookings" : "Login"}
+              </Button>
+            </Link>
+          </motion.div>
         </div>
-        <div className="absolute inset-0 bg-black/30"></div>
       </section>
 
-      {/* About */}
-      <section id="about" className="py-24 bg-white">
-         <h2 className="text-3xl text-center font-bold text-[#1A80E3] mb-8">
-            About Us
-          </h2>
-        <div className="container mx-auto flex flex-col md:flex-row items-center gap-8 px-4">
-          
-          {profile.aboutImg && (
-            <div className="w-full md:w-1/2 h-64 relative">
-              <Image
-                src={profile.aboutImg}
-                alt="About Turf"
-                fill
-                className="object-cover rounded-lg shadow-lg"
-              />
-            </div>
-          )}
-          <div className="w-full md:w-1/2 space-y-4">
-            <h2 className="text-3xl font-bold text-[#1A80E3]">
-              {profile.aboutTitle || "About Our Turf"}
-            </h2>
-            <p className="text-gray-700">
-              {profile.aboutDesc || "No description available."}
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* Side Navigation */}
+      <aside className="fixed top-1/2 right-4 transform -translate-y-1/2 z-50 hidden lg:flex flex-col gap-4 bg-white/80 backdrop-blur-md rounded-xl shadow-xl p-3">
+        {[
+          { id: "turf-fields", label: "Fields" },
+          { id: "about", label: "About" },
+          { id: "contact", label: "Contact" },
+        ].map((item) => (
+          <a
+            key={item.id}
+            href={`#${item.id}`}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#1A80E3] text-white font-medium hover:scale-105 transition-transform shadow-md"
+          >
+            {item.label}
+          </a>
+        ))}
+      </aside>
 
       {/* Turf Fields */}
       <section id="turf-fields" className="py-24 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl text-center font-bold text-[#1A80E3] mb-8">
+        <div className="container mx-auto px-4 md:px-8 lg:px-16">
+          <h2 className="text-4xl font-bold text-center text-[#1A80E3] mb-12">
             Our Fields
           </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {(profile.turfFields || []).map((field, i) => (
-              <div
-                key={i}
-                className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition flex flex-col"
-              >
-                {/* Field Carousel */}
-                <div className="w-full h-48 mb-4 relative">
-                  {field.photos && field.photos.length > 0 ? (
+          <Swiper
+            modules={[Navigation]}
+            navigation
+            spaceBetween={30}
+            slidesPerView={1.2}
+            breakpoints={{
+              640: { slidesPerView: 1.2 },
+              768: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
+            }}
+          >
+            {(profile.turfFields || []).map((field) => (
+              <SwiperSlide key={field.id} className="pb-5">
+                <motion.div
+                  whileHover={{ scale: 1.03 }}
+                  className="relative bg-white rounded-2xl shadow-lg overflow-visible"
+                >
+                  {(field.photos ?? []).length > 0 ? (
                     <Swiper
-                      spaceBetween={10}
-                      slidesPerView={1}
-                      loop
-                      pagination={{ clickable: true }}
+                      modules={[Navigation]}
                       navigation
-                      className="w-full h-full rounded-lg overflow-hidden"
+                      spaceBetween={5}
+                      slidesPerView={1}
+                      className="h-64 w-full"
                     >
-                      {field.photos.map((photo, idx) => (
+                      {(field.photos ?? []).map((photo, idx) => (
                         <SwiperSlide key={idx}>
                           <Image
                             src={photo}
                             alt={field.name}
                             fill
-                            className="object-cover"
+                            className="object-cover rounded-t-2xl"
                           />
                         </SwiperSlide>
                       ))}
                     </Swiper>
                   ) : (
-                    <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
+                    <div className="h-64 w-full bg-gray-200 flex items-center justify-center text-gray-500 rounded-t-2xl">
                       No Image
                     </div>
                   )}
-                </div>
 
-                {/* Field Info */}
-                <h3 className="text-xl font-semibold">{field.name}</h3>
-
-                <p className="mt-2 text-gray-600">
-                  Price per Slot: {field.pricePerSlot} BDT
-                </p>
-
-                <p
-                  className={`mt-1 font-medium ${
-                    field.available ? "text-green-600" : "text-red-500"
-                  }`}
-                >
-                  {field.available ? "Available" : "Booked"}
-                </p>
-
-                {/* Book Button */}
-                <button
-                  disabled={!field.available}
-                  onClick={() => handleBookField(field)}
-                  className={`mt-4 w-full py-2 rounded-lg text-white font-semibold transition ${
-                    field.available
-                      ? "bg-[#1A80E3] hover:bg-blue-700 cursor-pointer"
-                      : "bg-gray-400 cursor-not-allowed"
-                  }`}
-                >
-                  {field.available ? "Book Now" : "Unavailable"}
-                </button>
-              </div>
+                  <div className="p-6 pb-10 flex flex-col gap-2 relative">
+                    <h3 className="text-xl font-semibold">{field.name}</h3>
+                    <p className="text-gray-600 flex items-center gap-2">
+                      <DollarSign className="w-4 h-4 text-[#1A80E3]" />
+                      {field.pricePerSlot} BDT
+                    </p>
+                    <p className="text-gray-600 flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-[#1A80E3]" />
+                      {field.slotDuration} min
+                    </p>
+                    {field.openHour && field.closeHour && (
+                      <p className="text-gray-500 text-sm">
+                        Open: {field.openHour} - {field.closeHour}
+                      </p>
+                    )}
+                    <span
+                      className={`absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-semibold ${
+                        field.available
+                          ? "bg-green-100 text-green-800 animate-pulse"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {field.available ? "Available" : "Booked"}
+                    </span>
+                    <Button
+                      disabled={!field.available}
+                      onClick={() => handleBookField(field)}
+                      className={`mt-4 w-full ${
+                        field.available
+                          ? "bg-[#1A80E3] hover:bg-blue-700"
+                          : "bg-gray-400 cursor-not-allowed"
+                      }`}
+                    >
+                      {field.available ? "Book Now" : "Unavailable"}
+                    </Button>
+                  </div>
+                </motion.div>
+              </SwiperSlide>
             ))}
-          </div>
+          </Swiper>
         </div>
       </section>
 
-      {/* Contact */}
-      <section id="contact" className="py-24 bg-white">
-        <div className="container mx-auto px-4 max-w-3xl">
-          <h2 className="text-3xl font-bold text-center text-[#1A80E3] mb-8">
-            Contact
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-            {/* Address */}
-            <div className="flex flex-col space-y-2">
-              <h3 className="font-semibold text-lg">Address</h3>
+      {/* About Section */}
+      <section id="about" className="py-24 bg-white">
+        <div className="container mx-auto px-4 md:px-8 lg:px-16 flex flex-col md:flex-row items-center gap-12">
+          {profile.aboutImg && (
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="w-full md:w-1/2 h-64 md:h-80 relative rounded-xl overflow-hidden shadow-xl"
+            >
+              <Image
+                src={profile.aboutImg}
+                alt="About Turf"
+                fill
+                className="object-cover rounded-xl"
+              />
+            </motion.div>
+          )}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="w-full md:w-1/2 space-y-4"
+          >
+            <div className="bg-[#F1F5F9] p-6 rounded-xl shadow-lg relative before:absolute before:-top-6 before:-left-6 before:w-20 before:h-20 before:bg-[#1A80E3]/20 before:rounded-full">
+              <h2 className="text-3xl font-bold text-[#1A80E3]">
+                {profile.aboutTitle || "About Our Turf"}
+              </h2>
               <p className="text-gray-700">
-                {profile.address || "Address not available."}
+                {profile.aboutDesc || "No description available."}
               </p>
-              {profile.googleMapLink && (
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-24 bg-gray-50">
+        <div className="container mx-auto px-4 md:px-8 lg:px-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="p-6 bg-white rounded-xl shadow-lg flex flex-col gap-3 border-l-4 border-[#1A80E3]"
+          >
+            <h3 className="font-semibold text-lg flex items-center gap-2">
+              <MapPin /> Address
+            </h3>
+            <p>{profile.address || "Address not available."}</p>
+            {profile.googleMapLink && (
+              <a
+                href={profile.googleMapLink}
+                target="_blank"
+                className="text-[#1A80E3] hover:underline"
+              >
+                View on Google Maps
+              </a>
+            )}
+          </motion.div>
+
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="p-6 bg-white rounded-xl shadow-lg flex flex-col gap-3 border-l-4 border-[#1A80E3]"
+          >
+            {profile.phone && (
+              <p className="flex items-center gap-2">
+                <Phone />{" "}
                 <a
-                  href={profile.googleMapLink}
-                  target="_blank"
+                  href={`tel:${profile.phone}`}
                   className="text-[#1A80E3] hover:underline"
                 >
-                  View on Google Maps
+                  {profile.phone}
+                </a>
+              </p>
+            )}
+            {profile.email && (
+              <p className="flex items-center gap-2">
+                <Mail />{" "}
+                <a
+                  href={`mailto:${profile.email}`}
+                  className="text-[#1A80E3] hover:underline"
+                >
+                  {profile.email}
+                </a>
+              </p>
+            )}
+            <div className="flex items-center gap-4 mt-2">
+              {profile.facebookLink && (
+                <a href={profile.facebookLink} target="_blank">
+                  <Facebook className="text-[#1A80E3]" />
+                </a>
+              )}
+              {profile.instagramLink && (
+                <a href={profile.instagramLink} target="_blank">
+                  <Instagram className="text-[#1A80E3]" />
+                </a>
+              )}
+              {profile.whatsappLink && (
+                <a href={profile.whatsappLink} target="_blank">
+                  <MessageCircle className="text-[#1A80E3]" />
                 </a>
               )}
             </div>
-
-            {/* Contact Info */}
-            <div className="flex flex-col space-y-2">
-              {profile.phone && (
-                <p>
-                  <span className="font-semibold">Phone: </span>
-                  <a
-                    href={`tel:${profile.phone}`}
-                    className="text-[#1A80E3] hover:underline"
-                  >
-                    {profile.phone}
-                  </a>
-                </p>
-              )}
-              {profile.email && (
-                <p>
-                  <span className="font-semibold">Email: </span>
-                  <a
-                    href={`mailto:${profile.email}`}
-                    className="text-[#1A80E3] hover:underline"
-                  >
-                    {profile.email}
-                  </a>
-                </p>
-              )}
-              <div className="flex space-x-4 mt-2">
-                {profile.facebookLink && (
-                  <a
-                    href={profile.facebookLink}
-                    target="_blank"
-                    className="text-[#1A80E3] hover:underline"
-                  >
-                    Facebook
-                  </a>
-                )}
-                {profile.instagramLink && (
-                  <a
-                    href={profile.instagramLink}
-                    target="_blank"
-                    className="text-[#1A80E3] hover:underline"
-                  >
-                    Instagram
-                  </a>
-                )}
-                {profile.whatsappLink && (
-                  <a
-                    href={profile.whatsappLink}
-                    target="_blank"
-                    className="text-[#1A80E3] hover:underline"
-                  >
-                    WhatsApp
-                  </a>
-                )}
-              </div>
-            </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t bg-gray-100 py-8">
-        <div className="container mx-auto px-4 text-center text-sm text-gray-700">
-          &copy; {new Date().getFullYear()} Turf Booking App. All Rights
-          Reserved.
-        </div>
+      <footer className="py-8 bg-white border-t text-center text-sm text-gray-700">
+        &copy; {new Date().getFullYear()} Turf Booking App. All Rights Reserved.
       </footer>
     </div>
   );

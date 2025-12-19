@@ -1,93 +1,69 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 
-const aboutItems = [
-  {
-    title: "Empower Your Turf Business",
-    description:
-      "Register your turf, create a professional profile, and reach more customers with our platform.",
-    image: "/turf-field-2.jpg", // use public path
-  },
-  {
-    title: "Seamless Online Booking",
-    description:
-      "Manage bookings, accept payments, and track your turf’s availability from one dashboard.",
-    image: "/turf-field-3.jpg", // use public path
-  },
-  {
-    title: "Grow Your Revenue",
-    description:
-      "Get insights into your earnings, optimize booking schedules, and increase customer satisfaction.",
-    image: "/turf-field-4.jpg", // use public path
-  },
-];
-
-const AboutUsCard = ({ item }: { item: typeof aboutItems[0] }) => {
+export default function AboutUs() {
   return (
-    <Card id="about" className="text-center overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      <CardHeader className="bg-blue-50/50 flex justify-center">
-        <Image
-          src={item.image}
-          alt={item.title}
-          width={400}
-          height={200}
-          className="border-4 border-white shadow-md"
-        />
-      </CardHeader>
-      <CardContent className="p-6">
-        <CardTitle className="text-lg font-semibold">{item.title}</CardTitle>
-        <p className="text-muted-foreground mt-2">{item.description}</p>
-      </CardContent>
-      <CardFooter className="p-4 pt-0">
-        <Button variant="outline" className="w-full">
-          Learn More
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-};
-
-const AboutUs = () => {
-  return (
-    <section className="w-full bg-blue-50/50 py-24">
-      <div className="container mx-auto px-4 py-16 md:px-8 lg:px-16">
-        <div className="text-center max-w-2xl mx-auto">
-          <h2 className="text-3xl font-bold text-foreground">
-            About Our Turf Booking Platform
+    <section id="about" className="relative bg-white py-24">
+      <div className="container mx-auto px-4 md:px-8 lg:px-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        {/* Left Column: Content */}
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="lg:col-span-7 flex flex-col justify-center space-y-6"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
+            About Our Platform
           </h2>
-          <p className="text-muted-foreground mt-4">
-            We provide turf owners with all the tools to manage bookings,
-            showcase their turf, and grow their business efficiently.
+
+          <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-xl">
+            Our platform makes managing turf bookings effortless and efficient. Whether you manage a single turf or multiple facilities, you can handle schedules, reservations, and payments all from one simple, intuitive platform.
           </p>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
-          {aboutItems.map((item) => (
-            <AboutUsCard key={item.title} item={item} />
-          ))}
-        </div>
+          <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-xl">
+            Customers can book turf slots quickly and easily, while administrators have full control over availability, scheduling, and transactions — all through a seamless, user-friendly interface.
+          </p>
 
-        <div className="text-center mt-12">
-          <Button
-            size="lg"
-            className="bg-blue-600 hover:bg-blue-700 text-white"
-            onClick={() => (window.location.href = "/owner/register")}
-          >
-            Get Started
-          </Button>
-        </div>
+
+          {/* Call to Action */}
+          <div className="flex gap-4 pt-6 flex-wrap">
+            <Link
+              href="/about-us"
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition hover:bg-blue-700 hover:-translate-y-0.5 shadow-md"
+            >
+              Learn More
+            </Link>
+            <Link
+              href="/contact-us"
+              className="text-blue-600 font-medium border border-blue-600 px-6 py-3 rounded-lg transition hover:bg-blue-50"
+            >
+              Contact Us
+            </Link>
+          </div>
+        </motion.div>
+
+        {/* Right Column: Image */}
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="lg:col-span-5 w-full h-80 md:h-[28rem] relative rounded-xl overflow-hidden shadow-xl hover:scale-105 transition-transform duration-500"
+        >
+          <Image
+            src="/turf-field-4.jpg"
+            alt="Turf Management Illustration"
+            fill
+            className="object-cover"
+            priority
+          />
+        </motion.div>
       </div>
     </section>
   );
-};
-
-export default AboutUs;
+}

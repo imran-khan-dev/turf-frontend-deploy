@@ -54,6 +54,7 @@ export default async function Page({ params }: PageProps) {
 
   let profileData: TurfProfile | null = null;
   let turfFields: any | null = null;
+  let turfUser: any | null = null;
 
   try {
     const res = await serverFetch.get(
@@ -62,7 +63,7 @@ export default async function Page({ params }: PageProps) {
 
     if (res.ok) {
       const json = await res.json();
-      profileData = json.data; 
+      profileData = json.data;
     }
   } catch (err) {
     console.error("Error fetching turf profile:", err);
@@ -73,7 +74,6 @@ export default async function Page({ params }: PageProps) {
   try {
     const res = await serverFetch.get(`turf-field/get-fields/${trufProfileId}`);
 
-   
     if (res.ok) {
       const json = await res.json();
       turfFields = json;
@@ -81,8 +81,6 @@ export default async function Page({ params }: PageProps) {
   } catch (err) {
     console.error("Error fetching turf fields:", err);
   }
-
- 
 
   // If profile not found, show friendly 404-like message
   if (!profileData) {
@@ -103,12 +101,26 @@ export default async function Page({ params }: PageProps) {
     );
   }
 
+  try {
+    const sessionRes = await serverFetch.get(
+      `auth/turf-user-session?turfProfileId=${profileData.id}`,
+      {},
+      "turfUserAccess"
+    );
+    const sessionData = await sessionRes.json();
+    turfUser = sessionData.data?.isAuthenticated ? sessionData.data.user : null;
+  } catch (err) {
+    console.error("Error fetching turf customer's session data:", err);
+  }
+
+
   return (
     <TurfProfilePublicPage
       profile={{
         ...profileData,
         turfFields: turfFields?.data || [],
       }}
+      turfUser={turfUser}
     />
   );
 }

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { HeroProps } from "@/types/heroProps";
 import { SparkleIcon } from "@/assets/icons/SparkleIcon";
-// import { CheckIcon } from "@/assets/icons/CheckIcon";
 
 export function Hero({
   badge = {
@@ -20,7 +19,7 @@ export function Hero({
     "track customers, and grow their turf operations online.",
   ],
   features = [
-    "Built for Turf Businesses",
+    "Built for Turf Sports Businesses",
     "Centralized Booking Management",
     "Secure bKash Payments",
   ],
@@ -82,7 +81,7 @@ export function Hero({
                              hover:bg-blue-700 hover:-translate-y-0.5 hover:shadow-lg
                              active:scale-95 text-center"
                 >
-                  Get Started
+                  Start for Free
                 </Link>
 
                 <Link
