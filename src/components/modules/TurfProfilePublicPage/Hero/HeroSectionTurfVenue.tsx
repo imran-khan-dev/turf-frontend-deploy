@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 interface HeroSectionProps {
   profile: any;
   turfUser?: any;
-  scrollToFields: () => void;
+  scrollToFields: (() => void) | undefined;
 }
 
 export default function HeroSection({
@@ -66,14 +66,16 @@ export default function HeroSection({
           transition={{ duration: 1, delay: 0.7 }}
           className="flex gap-4 flex-wrap justify-center"
         >
-          <Button
-            onClick={scrollToFields}
-            className="bg-[#1A80E3] hover:bg-blue-700 text-white shadow-lg cursor-pointer"
-          >
-            View Fields
-          </Button>
+          {scrollToFields && (
+            <Button
+              onClick={scrollToFields}
+              className="bg-[#1A80E3] font-semibold hover:bg-blue-700 text-white shadow-lg cursor-pointer"
+            >
+              View Fields
+            </Button>
+          )}
           <Link href={profile.slug ? `/${profile.slug}/turf-user/login` : "#"}>
-            <Button className="bg-white text-[#1A80E3] hover:bg-gray-100 shadow-lg cursor-pointer">
+            <Button className="bg-white font-semibold text-[#1A80E3] hover:bg-gray-100 shadow-lg cursor-pointer">
               {turfUser ? "My Bookings" : "Login"}
             </Button>
           </Link>

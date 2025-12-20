@@ -11,7 +11,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
 import { CalendarDays, Clock, DollarSign, User } from "lucide-react";
 import HeroSection from "@/components/modules/TurfProfilePublicPage/Hero/HeroSectionTurfVenue";
 import ContactSectionTurfVenue from "@/components/modules/TurfProfilePublicPage/Contact/ContactSectionTurfVenue";
@@ -30,7 +29,8 @@ export default function BookingClient({
 }: BookingClientProps) {
   const router = useRouter();
 
-  const [date, setDate] = useState<Date>();
+  // Default date = today
+  const [date, setDate] = useState<Date>(() => new Date());
   const [slots, setSlots] = useState<any[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<any | null>(null);
@@ -87,7 +87,7 @@ export default function BookingClient({
         setError(json.message || "Booking failed");
         return;
       }
-      router.push(`/booking/${json.data.booking.id}`);
+      router.push(`/booking/${json.data.booking.id}/#booking`);
     } catch {
       setError("Booking failed");
     } finally {
@@ -99,9 +99,6 @@ export default function BookingClient({
   const FieldInfo = () => (
     <div className="bg-white rounded-xl shadow p-6 flex flex-col gap-3">
       <h2 className="text-2xl font-bold text-[#1A80E3]">{field.name}</h2>
-      <p className="text-gray-600">
-        {field.description || "No description available."}
-      </p>
       <div className="flex gap-6 text-gray-700 mt-2">
         <div className="flex items-center gap-1">
           <DollarSign size={16} className="text-[#1A80E3]" />
@@ -115,26 +112,42 @@ export default function BookingClient({
     </div>
   );
 
+  // Improved Date Picker (compact, readable, non-full width)
   const DatePicker = () => (
     <div className="bg-white rounded-xl shadow p-6">
       <label className="font-semibold flex items-center gap-2 mb-3">
         <CalendarDays size={18} /> Select Date
       </label>
+
       <Popover>
         <PopoverTrigger asChild>
-          <Input
-            readOnly
-            placeholder="Pick a date"
-            value={date ? format(date, "PPP") : ""}
-            className="cursor-pointer"
-          />
+          <button
+            type="button"
+            className="
+              flex items-center gap-3
+              px-4 h-11
+              min-w-[240px]
+              rounded-lg border
+              bg-white
+              text-gray-800
+              hover:bg-gray-50
+              transition
+            "
+          >
+            <CalendarDays size={16} className="text-[#1A80E3]" />
+            <span className="font-medium">
+              {format(date, "EEEE, dd MMM yyyy")}
+            </span>
+          </button>
         </PopoverTrigger>
+
         <PopoverContent className="w-auto p-0">
           <Calendar
             mode="single"
+            required={true}
             selected={date}
             onSelect={setDate}
-            disabled={(date) => date < new Date()}
+            disabled={(d) => d < new Date()}
             initialFocus
           />
         </PopoverContent>
@@ -157,7 +170,7 @@ export default function BookingClient({
               key={slot.startISO}
               disabled={!slot.status}
               onClick={() => setSelectedSlot(slot)}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition
+              className={`px-3 py-2 rounded-lg text-sm font-medium transition cursor-pointer
                 ${
                   isSelected
                     ? "bg-[#1A80E3] text-white shadow"
@@ -191,7 +204,7 @@ export default function BookingClient({
           <strong>Field:</strong> {field.name}
         </p>
         <p>
-          <strong>Date:</strong> {date ? format(date, "PPP") : "Not selected"}
+          <strong>Date:</strong> {format(date, "EEEE, dd MMM yyyy")}
         </p>
         <p>
           <strong>Time:</strong>{" "}
@@ -211,7 +224,7 @@ export default function BookingClient({
       <Button
         onClick={handleConfirmBooking}
         disabled={!selectedSlot || bookingLoading}
-        className="w-full mt-4 bg-[#1A80E3] hover:bg-blue-700"
+        className="w-full mt-4 bg-[#1A80E3] hover:bg-blue-700 cursor-pointer"
       >
         {bookingLoading ? "Booking..." : "Confirm Booking"}
       </Button>
@@ -223,7 +236,6 @@ export default function BookingClient({
 
   return (
     <div className="min-h-screen bg-[#F1F5F9]">
-      {/* Hero */}
       <HeroSection
         profile={turfProfile}
         turfUser={user}
@@ -232,7 +244,6 @@ export default function BookingClient({
 
       <section className="py-24 pb-0">
         <div className="container mx-auto px-4 md:px-8 lg:px-16 grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* LEFT Column */}
           <div className="lg:col-span-2 space-y-6">
             <FieldInfo />
             <DatePicker />
@@ -244,14 +255,11 @@ export default function BookingClient({
             )}
           </div>
 
-          {/* RIGHT Column */}
           <BookingSummary />
         </div>
       </section>
 
-      {/* Contact */}
       <ContactSectionTurfVenue profile={turfProfile} />
-      {/* Footer */}
       <FooterSectionTurfVenue profile={turfProfile} />
     </div>
   );
