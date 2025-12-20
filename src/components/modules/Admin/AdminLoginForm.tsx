@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { Button } from "../../ui/button";
 import {
   Field,
@@ -19,13 +19,23 @@ const AdminLoginForm = ({ redirect }: { redirect?: string }) => {
     null
   );
 
+  const emailRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
+
+  const handleGuestLogin = () => {
+    if (emailRef.current && passwordRef.current) {
+      emailRef.current.value = "imranadmin@turf.com";
+      passwordRef.current.value = "123456Imran@";
+      toast.info("Guest credentials filled");
+    }
+  };
+
   const getFieldError = (fieldName: string) => {
     if (state && "errors" in state && state.errors) {
       const error = state.errors.find((err: any) => err.field === fieldName);
       return error?.message;
-    } else {
-      return null;
     }
+    return null;
   };
 
   useEffect(() => {
@@ -38,19 +48,18 @@ const AdminLoginForm = ({ redirect }: { redirect?: string }) => {
     <form action={formAction}>
       {redirect && <input type="hidden" name="redirect" value={redirect} />}
       <input type="hidden" name="role" value="admin" />
+
       <FieldGroup>
         <div className="grid grid-cols-1 gap-4">
-          {/* Email */}
           <Field>
             <FieldLabel htmlFor="email">Email</FieldLabel>
             <Input
+              ref={emailRef}
               id="email"
               name="email"
               type="email"
               placeholder="m@example.com"
-              //   required
             />
-
             {getFieldError("email") && (
               <FieldDescription className="text-red-600">
                 {getFieldError("email")}
@@ -58,15 +67,14 @@ const AdminLoginForm = ({ redirect }: { redirect?: string }) => {
             )}
           </Field>
 
-          {/* Password */}
           <Field>
             <FieldLabel htmlFor="password">Password</FieldLabel>
             <Input
+              ref={passwordRef}
               id="password"
               name="password"
               type="password"
               placeholder="Enter your password"
-              //   required
             />
             {getFieldError("password") && (
               <FieldDescription className="text-red-600">
@@ -75,30 +83,20 @@ const AdminLoginForm = ({ redirect }: { redirect?: string }) => {
             )}
           </Field>
         </div>
-        <FieldGroup className="mt-4">
-          <Field>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? "Logging in..." : "Login"}
-            </Button>
 
-            {/* <FieldDescription className="px-6 text-center">
-              Don&apos;t have an account?{" "}
-              <a
-                href="owner/register"
-                className="text-blue-600 hover:underline"
-              >
-                Sign up
-              </a>
-            </FieldDescription> */}
-            {/* <FieldDescription className="px-6 text-center">
-              <a
-                href="/forget-password"
-                className="text-blue-600 hover:underline"
-              >
-                Forgot password?
-              </a>
-            </FieldDescription> */}
-          </Field>
+        <FieldGroup className="mt-6 space-y-3">
+          <Button type="submit" disabled={isPending} className="w-full">
+            {isPending ? "Logging in..." : "Login"}
+          </Button>
+
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleGuestLogin}
+            className="w-full"
+          >
+            Login as Guest Admin
+          </Button>
         </FieldGroup>
       </FieldGroup>
     </form>
