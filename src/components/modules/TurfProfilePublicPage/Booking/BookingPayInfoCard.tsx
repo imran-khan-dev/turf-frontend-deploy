@@ -112,7 +112,7 @@ export default function BookingPayInfoCard({
         bg-[#1A80E3] hover:bg-blue-700
         w-full md:w-auto
         px-6 h-11
-        text-base font-semibold
+        text-base font-semibold cursor-pointer
       "
           >
             Pay Now

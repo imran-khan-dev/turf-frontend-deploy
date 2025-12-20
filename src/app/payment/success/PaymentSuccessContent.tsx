@@ -1,89 +1,103 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import Link from "next/link";
+import { CalendarDays, DollarSign, CheckCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-const PaymentSuccessContent = () => {
-  const searchParams = useSearchParams();
-  const bookingId = searchParams.get("bookingId");
-  const paymentId = searchParams.get("paymentID");
-  const turfProfileSlug = searchParams.get("turfProfileSlug");
+interface PaymentSuccessContentProps {
+  booking: any;
+  paymentID?: string | null;
+  turfProfileSlug?: string | null;
+}
 
-  const [booking, setBooking] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchBooking() {
-      if (!bookingId) {
-        setLoading(false);
-        return;
-      }
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_API_URL}booking/get-booking/${bookingId}`,
-          { cache: "no-store" }
-        );
-        const json = await res.json();
-
-        if (json.success) setBooking(json.data);
-      } catch (err) {
-        console.error("Failed to fetch booking:", err);
-      }
-
-      setLoading(false);
-    }
-
-    fetchBooking();
-  }, [bookingId]);
+export default function PaymentSuccessContent({
+  booking,
+  paymentID,
+  turfProfileSlug,
+}: PaymentSuccessContentProps) {
+  const isPending = booking?.paymentStatus === "PENDING";
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-10">
-      <div className="max-w-md w-full bg-white shadow-lg rounded-xl p-8 text-center">
-        <h1 className="text-2xl font-bold text-green-600 mb-4">
-          ✔ Payment Successful
-        </h1>
-
-        <p className="text-gray-700 mb-6">
-          Thank you! Your booking has been confirmed.
-        </p>
-
-        {paymentId && (
-          <p className="text-gray-500 text-sm mb-2">
-            Payment ID: <span className="font-medium">{paymentId}</span>
-          </p>
-        )}
-
-        {loading ? (
-          <p className="text-gray-500 mt-4">Loading booking details...</p>
-        ) : booking ? (
-          <div className="mt-6 bg-gray-100 rounded-lg p-4 text-left">
-            <h2 className="font-semibold mb-2">Booking Summary</h2>
-            <p>Field: {booking?.turfField?.name}</p>
-            <p>Amount Paid: {booking.paymentAmount} BDT</p>
-            <p>Status: {booking.paymentStatus}</p>
-            <p>
-              Time:{" "}
-              {new Date(booking.startTime).toLocaleString("en-GB", {
-                dateStyle: "medium",
-                timeStyle: "short",
-              })}
-            </p>
+    <div className="min-h-screen bg-[#F1F5F9] flex flex-col items-center justify-center px-4 py-10">
+      <div className="max-w-3xl w-full bg-white rounded-xl shadow-lg p-8 space-y-8">
+        {/* Success Header */}
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <CheckCircle size={32} className="text-green-500 flex-shrink-0" />
+            <div className="min-w-0">
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A80E3] break-words">
+                Payment Successful!
+              </h1>
+              <p className="text-gray-600 text-base sm:text-sm">
+                Your booking has been confirmed
+              </p>
+            </div>
           </div>
-        ) : (
-          <p className="text-gray-500 mt-4">No booking data available.</p>
-        )}
 
-        <Link
-          href={`/${turfProfileSlug}`}
-          className="block mt-6 w-full bg-green-500 text-white py-2 rounded-lg"
-        >
-          Back to Home
-        </Link>
+          <span
+            className={`shrink-0 px-3 py-1.5 text-sm font-semibold rounded-full ${
+              isPending
+                ? "bg-yellow-100 text-yellow-700"
+                : "bg-green-100 text-green-700"
+            }`}
+          >
+            {booking?.paymentStatus}
+          </span>
+        </div>
+
+        {/* Booking Summary */}
+        <div className="bg-gray-50 rounded-xl p-6 space-y-4 shadow-inner">
+          {paymentID && (
+            <p className="text-gray-500 text-sm">
+              Payment ID: <span className="font-medium">{paymentID}</span>
+            </p>
+          )}
+
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <div className="space-y-2">
+              <p className="text-gray-700">
+                <span className="font-medium">Field:</span>{" "}
+                {booking?.turfField?.name}
+              </p>
+              <p className="text-gray-700 flex items-center gap-1">
+                <DollarSign size={16} className="text-[#1A80E3]" />
+                <span className="font-medium">
+                  {booking?.paymentAmount} BDT
+                </span>
+              </p>
+              <p className="text-gray-700 flex items-center gap-1">
+                <CalendarDays size={16} className="text-[#1A80E3]" />
+                <span>
+                  {new Date(booking?.startTime).toLocaleString("en-GB", {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Buttons */}
+        <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
+          <Link href={`/${turfProfileSlug || "/"}`}>
+            <Button className="w-full sm:w-auto py-2 px-6 rounded-lg border border-gray-300 bg-white text-gray-800 hover:bg-gray-50">
+              Back to Home
+            </Button>
+          </Link>
+
+          <Link
+            href={`${
+              turfProfileSlug ? `/${turfProfileSlug}/user-dashboard` : "/"
+            }`}
+          >
+            <Button className="w-full sm:w-auto py-2 px-6 rounded-lg bg-[#1A80E3] text-white hover:bg-blue-700">
+              My Bookings
+            </Button>
+          </Link>
+        </div>
       </div>
     </div>
   );
-};
-
-export default PaymentSuccessContent;
+}
