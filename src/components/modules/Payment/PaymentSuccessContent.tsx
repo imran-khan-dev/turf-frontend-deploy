@@ -82,7 +82,7 @@ export default function PaymentSuccessContent({
         {/* Buttons */}
         <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
           <Link href={`/${turfProfileSlug || "/"}`}>
-            <Button className="w-full sm:w-auto py-2 px-6 rounded-lg border border-gray-300 bg-white text-gray-800 hover:bg-gray-50">
+            <Button className="w-full sm:w-auto py-2 px-6 rounded-lg border border-gray-300 bg-white text-gray-800 hover:bg-gray-50 cursor-pointer">
               Back to Home
             </Button>
           </Link>
@@ -92,7 +92,7 @@ export default function PaymentSuccessContent({
               turfProfileSlug ? `/${turfProfileSlug}/user-dashboard` : "/"
             }`}
           >
-            <Button className="w-full sm:w-auto py-2 px-6 rounded-lg bg-[#1A80E3] text-white hover:bg-blue-700">
+            <Button className="w-full sm:w-auto py-2 px-6 rounded-lg bg-[#1A80E3] text-white hover:bg-blue-700 cursor-pointer">
               My Bookings
             </Button>
           </Link>

@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import PaymentSuccessContent from "./PaymentSuccessContent";
+import PaymentSuccessContent from "../../../components/modules/Payment/PaymentSuccessContent";
 
 const PaymentSuccessPage = () => {
   return (
