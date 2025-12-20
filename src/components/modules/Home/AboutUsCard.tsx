@@ -33,17 +33,17 @@ export default function AboutUs() {
           {/* Call to Action */}
           <div className="flex gap-4 pt-6 flex-wrap">
             <Link
-              href="/about-us"
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition hover:bg-blue-700 hover:-translate-y-0.5 shadow-md"
-            >
-              Learn More
-            </Link>
-            <Link
-              href="/contact-us"
-              className="text-blue-600 font-medium border border-blue-600 px-6 py-3 rounded-lg transition hover:bg-blue-50"
+              href="#contact"
+              className="bg-[#0C78E1] text-white px-6 py-3 rounded-lg font-medium transition hover:bg-blue-700 hover:-translate-y-0.5 shadow-md"
             >
               Contact Us
             </Link>
+            {/* <Link
+              href="#contact"
+              className="text-blue-600 font-medium border border-blue-600 px-6 py-3 rounded-lg transition hover:bg-blue-50"
+            >
+              Contact Us
+            </Link> */}
           </div>
         </motion.div>
 

@@ -85,7 +85,7 @@ export function Hero({
                 </Link>
 
                 <Link
-                  href="/about-us"
+                  href="#about"
                   className="self-center text-white text-lg font-medium
                              underline-offset-4 hover:underline transition"
                 >

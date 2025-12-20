@@ -36,10 +36,10 @@ const PublicNavbar = () => {
         {/* Desktop Buttons: Login + Start for Free */}
         <div className="hidden md:flex items-center space-x-2">
           <Link href="/owner/login">
-            <Button variant="outline" className="font-semibold">Login</Button>
+            <Button variant="outline" className="font-semibold cursor-pointer">Login</Button>
           </Link>
           <Link href="/owner/register">
-            <Button className="font-semibold">Start for Free</Button>
+            <Button className="font-semibold cursor-pointer">Start for Free</Button>
           </Link>
         </div>
 
