@@ -9,9 +9,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { redirect } from "next/navigation";
-import serverFetch from "@/lib/server-fetch";
-import { payNowAction } from "./PayButton";
 
 interface Booking {
   id: string;
@@ -26,10 +23,11 @@ interface Booking {
 
 interface Props {
   initialBookings: Booking[];
+  error?: string | null;
 }
 
-export default function BookingsTableOwner({ initialBookings }: Props) {
-  const [statusFilter, setStatusFilter] = useState<string>("ALL");
+export default function BookingsTableOwner({ initialBookings, error }: Props) {
+  const [statusFilter, setStatusFilter] = useState("ALL");
   const [minAmount, setMinAmount] = useState<number | "">("");
   const [maxAmount, setMaxAmount] = useState<number | "">("");
 
@@ -42,21 +40,32 @@ export default function BookingsTableOwner({ initialBookings }: Props) {
     });
   }, [initialBookings, statusFilter, minAmount, maxAmount]);
 
-  if (!initialBookings || initialBookings.length === 0)
+  /* ---------------- ERROR ---------------- */
+  if (error) {
+    return (
+      <div className="text-center py-10 text-red-600 font-medium bg-red-50 rounded-lg">
+        {error}
+      </div>
+    );
+  }
+
+  /* ---------------- EMPTY ---------------- */
+  if (!initialBookings || initialBookings.length === 0) {
     return (
       <div className="text-center py-10 text-gray-500 font-medium">
         No bookings found.
       </div>
     );
+  }
 
   return (
     <div>
       {/* Filters */}
-      <div className="mb-4 flex flex-wrap gap-4 items-center">
+      <div className="mb-4 flex flex-wrap gap-3 items-center">
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="border p-1 rounded"
+          className="border p-2 rounded text-sm"
         >
           <option value="ALL">All Status</option>
           <option value="PENDING">Pending</option>
@@ -66,66 +75,107 @@ export default function BookingsTableOwner({ initialBookings }: Props) {
 
         <input
           type="number"
-          placeholder="Min Amount"
+          placeholder="Min ৳"
           value={minAmount}
           onChange={(e) =>
             setMinAmount(e.target.value ? Number(e.target.value) : "")
           }
-          className="border p-1 rounded w-24"
+          className="border p-2 rounded w-24 text-sm"
         />
 
         <input
           type="number"
-          placeholder="Max Amount"
+          placeholder="Max ৳"
           value={maxAmount}
           onChange={(e) =>
             setMaxAmount(e.target.value ? Number(e.target.value) : "")
           }
-          className="border p-1 rounded w-24"
+          className="border p-2 rounded w-24 text-sm"
         />
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow className="bg-[#1A80E3]">
-            <TableHead className="text-white">Item</TableHead>
-            <TableHead className="text-white">User</TableHead>
-            <TableHead className="text-white">Start</TableHead>
-            <TableHead className="text-white">End</TableHead>
-            <TableHead className="text-white">Amount</TableHead>
-            <TableHead className="text-white">Status</TableHead>
-          </TableRow>
-        </TableHeader>
+      {/* ================= MOBILE CARDS ================= */}
+      <div className="space-y-4 md:hidden">
+        {filteredBookings.map((b) => (
+          <div
+            key={b.id}
+            className="rounded-xl border shadow-sm p-4 bg-white space-y-2"
+          >
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="font-semibold">{b.itemName}</p>
+                <p className="text-sm text-gray-500">{b.userName}</p>
+              </div>
 
-        <TableBody>
-          {filteredBookings.map((booking) => (
-            <TableRow key={booking.id} className="hover:bg-blue-50 transition">
-              <TableCell>{booking.itemName}</TableCell>
-              <TableCell>{booking.userName}</TableCell>
-              <TableCell>
-                {new Date(booking.startTime).toLocaleString()}
-              </TableCell>
-              <TableCell>
-                {new Date(booking.endTime).toLocaleString()}
-              </TableCell>
-              <TableCell>{booking.paymentAmount} ৳</TableCell>
-              <TableCell>
-                <Badge
-                  className={
-                    booking.status === "PENDING"
-                      ? "bg-yellow-600"
-                      : booking.status === "CONFIRMED"
-                      ? "bg-green-600"
-                      : "bg-gray-600"
-                  }
-                >
-                  {booking.status}
-                </Badge>
-              </TableCell>
+              <Badge
+                className={
+                  b.status === "PENDING"
+                    ? "bg-yellow-600"
+                    : b.status === "CONFIRMED"
+                    ? "bg-green-600"
+                    : "bg-gray-600"
+                }
+              >
+                {b.status}
+              </Badge>
+            </div>
+
+            <div className="text-sm text-gray-600">
+              <p>
+                <strong>Start:</strong> {new Date(b.startTime).toLocaleString()}
+              </p>
+              <p>
+                <strong>End:</strong> {new Date(b.endTime).toLocaleString()}
+              </p>
+            </div>
+
+            <div className="flex justify-between items-center pt-2">
+              <span className="font-semibold">{b.paymentAmount} ৳</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ================= DESKTOP TABLE ================= */}
+      <div className="hidden md:block">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-[#1A80E3] hover:bg-[#1A80E3]">
+              <TableHead className="text-white">Item</TableHead>
+              <TableHead className="text-white">User</TableHead>
+              <TableHead className="text-white">Start</TableHead>
+              <TableHead className="text-white">End</TableHead>
+              <TableHead className="text-white">Amount</TableHead>
+              <TableHead className="text-white">Status</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+
+          <TableBody>
+            {filteredBookings.map((b) => (
+              <TableRow key={b.id} className="hover:bg-blue-50 transition">
+                <TableCell>{b.itemName}</TableCell>
+                <TableCell>{b.userName}</TableCell>
+                <TableCell>{new Date(b.startTime).toLocaleString()}</TableCell>
+                <TableCell>{new Date(b.endTime).toLocaleString()}</TableCell>
+                <TableCell>{b.paymentAmount} ৳</TableCell>
+                <TableCell>
+                  <Badge
+                    className={
+                      b.status === "PENDING"
+                        ? "bg-yellow-600"
+                        : b.status === "CONFIRMED"
+                        ? "bg-green-600"
+                        : "bg-gray-600"
+                    }
+                  >
+                    {b.status}
+                  </Badge>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }

@@ -8,10 +8,11 @@ export default async function TurfUserProfileUdpatePage() {
 
   if (!turfUser) return <div>Loading</div>;
 
+  console.log("turfUserProfile", turfUser);
+
   return (
     <div>
       <TurfUserUpdateProfileForm turfUser={turfUser} />
     </div>
   );
 }
-

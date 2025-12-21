@@ -3,10 +3,23 @@ import GetAllOwnersTable from "@/components/modules/Admin/GetAllOwnersTable";
 import serverFetch from "@/lib/server-fetch";
 
 export default async function AllTurfOwnersPage() {
-  const res = await serverFetch.get("user/get-owners", {}, "adminAccess");
-  const data = await res.json();
+  let owners: any[] = [];
 
-  const owners = data?.data ?? [];
+  let error: string | null = null;
+
+  try {
+    const res = await serverFetch.get("user/get-owners", {}, "adminAccess");
+    if (!res.ok) {
+      if (res.status === 401 || res.status === 403) {
+        error = "You are not authorized to view this data.";
+      } else {
+        error = "Failed to load turf users. Please try again.";
+      }
+    } else {
+      const data = await res.json();
+      owners = data?.data ?? [];
+    }
+  } catch (error) {}
 
   return (
     <div className="rounded-xl border border-[#1A80E3]/30 shadow-lg p-4">
@@ -14,7 +27,7 @@ export default async function AllTurfOwnersPage() {
         All Turf Owners
       </h2>
 
-      <GetAllOwnersTable owners={owners} />
+      <GetAllOwnersTable owners={owners} error={error} />
     </div>
   );
 }

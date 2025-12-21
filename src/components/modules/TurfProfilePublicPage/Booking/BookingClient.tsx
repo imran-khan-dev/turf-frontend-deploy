@@ -20,12 +20,14 @@ interface BookingClientProps {
   field: any;
   user: { name: string; email: string };
   turfProfile: any;
+  error: string | null;
 }
 
 export default function BookingClient({
   field,
   user,
   turfProfile,
+  error: pageError,
 }: BookingClientProps) {
   const router = useRouter();
 
@@ -35,7 +37,7 @@ export default function BookingClient({
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<any | null>(null);
   const [bookingLoading, setBookingLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(pageError || null);
 
   // Fetch slots when date changes
   useEffect(() => {
@@ -242,7 +244,7 @@ export default function BookingClient({
         scrollToFields={takeToFields}
       />
 
-      <section className="py-24 pb-0">
+      <section className="py-24 pb-12">
         <div className="container mx-auto px-4 md:px-8 lg:px-16 grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <FieldInfo />

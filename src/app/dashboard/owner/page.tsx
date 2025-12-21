@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import BookingsTable from "@/components/modules/Booking/BookingsTable";
 import BookingsTableOwner from "@/components/modules/Booking/BookingsTableOwner";
 import serverFetch from "@/lib/server-fetch";
 
