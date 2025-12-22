@@ -19,10 +19,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Turf Booking App",
-  description: "",
-};
+
 
 export default function RootLayout({
   children,

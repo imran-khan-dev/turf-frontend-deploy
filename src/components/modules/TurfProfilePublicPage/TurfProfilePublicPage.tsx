@@ -27,6 +27,7 @@ export default function TurfProfilePublicPage({
 
   return (
     <div className="font-sans w-full">
+      
       <HeroSection
         profile={profile}
         turfUser={turfUser}

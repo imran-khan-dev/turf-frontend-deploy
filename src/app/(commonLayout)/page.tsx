@@ -5,6 +5,12 @@ import AboutUs from "@/components/modules/Home/AboutUsCard";
 import Features from "@/components/modules/Home/Features";
 import ContactUs from "@/components/modules/Home/ContactUs";
 
+export const metadata = {
+  title: "Turf Booking App - Manage Your Turf Online",
+  description:
+    "Free platform for turf sports businesses to manage bookings, showcase fields, and receive confirmed reservations online.",
+};
+
 export default function Home() {
   return (
     <>

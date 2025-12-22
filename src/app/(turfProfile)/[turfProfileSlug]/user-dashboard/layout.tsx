@@ -16,6 +16,10 @@ function mapRole(tokenRole: string | undefined) {
   return roleMap[tokenRole] ?? null;
 }
 
+export const metadata = {
+  title: "Turf Customer Dashboard",
+};
+
 export default async function DashboardLayout({ children, params }: any) {
   const { turfProfileSlug } = await params;
 

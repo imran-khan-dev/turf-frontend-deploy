@@ -5,6 +5,49 @@ import ContactSectionTurfVenue from "@/components/modules/TurfProfilePublicPage/
 import FooterSectionTurfVenue from "@/components/modules/TurfProfilePublicPage/Footer/FooterSectionTurfVenue";
 import BookingPayInfoCard from "../../../components/modules/TurfProfilePublicPage/Booking/BookingPayInfoCard";
 
+interface BookingPageProps {
+  params: { bookingId: string };
+}
+
+export async function generateMetadata({ params }: BookingPageProps) {
+  const { bookingId } = await params;
+
+  try {
+    const res = await serverFetch.get(`booking/get-booking/${bookingId}`);
+    if (!res.ok) throw new Error("Booking not found");
+    const { data: booking } = await res.json();
+
+    const profileRes = await serverFetch.get(
+      `turf-profile/get-turf-profile/id/${booking.turfProfileId}`
+    );
+    if (!profileRes.ok) throw new Error("Turf profile not found");
+    const { data: turfProfile } = await profileRes.json();
+
+    const title = `Booking #${booking.id} - ${turfProfile.name}`;
+    const description = `View booking details for ${turfProfile.name}, including slot, field, and payment info.`;
+
+    return {
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        images: turfProfile.heroImage
+          ? [{ url: turfProfile.heroImage, width: 1200, height: 630 }]
+          : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+      },
+    };
+  } catch (err) {
+    console.error("Error generating metadata:", err);
+    return { title: "Booking Page" };
+  }
+}
+
 // Server Action
 async function createPayment(paymentId: string) {
   "use server";

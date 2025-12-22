@@ -49,6 +49,32 @@ interface TurfProfile {
   googleMapLink?: string;
 }
 
+// Dynamic Metadata for the page
+export async function generateMetadata({ params }: PageProps) {
+  const { turfProfileSlug } = await params;
+
+  try {
+    const res = await serverFetch.get(
+      `turf-profile/get-turf-profile/${turfProfileSlug}`
+    );
+
+    if (!res.ok) return { title: "Turf Not Found" };
+
+    const json = await res.json();
+    const profile: TurfProfile = json.data;
+
+    return {
+      title: profile.name || "Turf Profile",
+      description:
+        profile.aboutDesc ||
+        `Check out ${profile.name}'s turf, book slots, and enjoy a great playing experience.`,
+    };
+  } catch (err) {
+    console.error("Error fetching turf profile for metadata:", err);
+    return { title: "Turf Profile" };
+  }
+}
+
 export default async function Page({ params }: PageProps) {
   const { turfProfileSlug } = await params;
 
@@ -113,14 +139,15 @@ export default async function Page({ params }: PageProps) {
     console.error("Error fetching turf customer's session data:", err);
   }
 
-
   return (
-    <TurfProfilePublicPage
-      profile={{
-        ...profileData,
-        turfFields: turfFields?.data || [],
-      }}
-      turfUser={turfUser}
-    />
+    <>
+      <TurfProfilePublicPage
+        profile={{
+          ...profileData,
+          turfFields: turfFields?.data || [],
+        }}
+        turfUser={turfUser}
+      />
+    </>
   );
 }

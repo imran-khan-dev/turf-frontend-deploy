@@ -16,6 +16,11 @@ function mapRole(tokenRole: string | undefined) {
   return roleMap[tokenRole] ?? null;
 }
 
+export const metadata = {
+  title: "Dashboard - Turf Booking App",
+};
+
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default async function DashboardLayout({ children }: any) {
   const accessToken = await getCookie("adminAccess");
